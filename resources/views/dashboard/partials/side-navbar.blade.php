@@ -33,10 +33,10 @@
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href=""
-                                class="nav-link @if(request()->path() == '/') active @endif">
+                            <a href="{{route('category.index')}}"
+                                class="nav-link @if(request()->path() == '/category') active @endif">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>{{ __('Basic Information') }}</p>
+                                <p>{{ __('Category') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
