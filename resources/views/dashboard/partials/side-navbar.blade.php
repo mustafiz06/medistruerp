@@ -40,8 +40,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href=""
-                                class="nav-link @if(request()->path() == '/') active @endif">
+                            <a href="{{route('unit.index')}}"
+                                class="nav-link @if(request()->path() == '/unit') active @endif">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Unit') }}</p>
                             </a>
