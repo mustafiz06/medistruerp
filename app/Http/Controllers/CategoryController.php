@@ -27,11 +27,11 @@ class CategoryController extends Controller
             'slug' => $request->slug,
             'status' => $request->status,
         ]);
-
-        return redirect()->back()->with([
-            'messege' => 'Category Added Successfully!',
+        $notification = array(
+            'messege' => 'Category Added successfully!',
             'alert' => 'success'
-        ]);
+        );
+        return redirect()->back()->with('notification', $notification);
     }
 
 
@@ -43,7 +43,11 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return back();
+        $notification = array(
+            'messege' => 'Category Deleted successfully!',
+            'alert' => 'success'
+        );
+        return redirect()->back()->with('notification', $notification);
     }
 
 
@@ -57,7 +61,7 @@ class CategoryController extends Controller
             $category->created_at = now();
             $category->save();
             $notification = array(
-                'messege' => 'status change successfully!',
+                'messege' => 'Status change successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
@@ -88,6 +92,10 @@ class CategoryController extends Controller
         $category->slug = $request->slug;
         $category->status = $request->status;
         $category->save();
-        return back();
+        $notification = array(
+            'messege' => 'Category Updated successfully!',
+            'alert' => 'success'
+        );
+        return redirect()->back()->with('notification', $notification);
     }
 }
