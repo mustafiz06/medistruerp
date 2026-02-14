@@ -44,9 +44,9 @@
   
 <div class="wrapper">
 
-    @include('dashboard.partials.top-navbar')
+    @include('partials.top-navbar')
     
-    @include('dashboard.partials.side-navbar')
+    @include('partials.side-navbar')
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

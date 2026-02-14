@@ -10,7 +10,7 @@ class UnitController extends Controller
     public function index()
     {
         $units = Unit::all();
-        return view('dashboard.setting.unit', compact('units'));
+        return view('setting.unit', compact('units'));
     }
 
 

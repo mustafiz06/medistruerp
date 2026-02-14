@@ -10,7 +10,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::all();
-        return view('dashboard.setting.brand', compact('brands'));
+        return view('setting.brand', compact('brands'));
     }
 
 
