@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,10 @@ Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store')
 Route::post('/unit/delete/{id}/', [UnitController::class, 'delete'])->name('unit.delete');
 Route::post('/unit/status/{id}/', [UnitController::class, 'status'])->name('unit.status');
 Route::post('/unit/edit/{id}/', [UnitController::class, 'edit'])->name('unit.edit');
+
+
+Route::get('/brand', [BrandController::class, 'index'])->name('brand.index');
+Route::post('/brand/store', [BrandController::class, 'store'])->name('brand.store');;
+Route::post('/brand/delete/{id}/', [BrandController::class, 'delete'])->name('brand.delete');
+Route::post('/brand/status/{id}/', [BrandController::class, 'status'])->name('brand.status');
+Route::post('/brand/edit/{id}/', [BrandController::class, 'edit'])->name('brand.edit');

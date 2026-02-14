@@ -20,6 +20,7 @@
                         </p>
                     </a>
                 </li>
+
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link
                 @if(request()->path() == '/') active
@@ -44,6 +45,13 @@
                                 class="nav-link @if(request()->path() == '/unit') active @endif">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Unit') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('brand.index')}}"
+                                class="nav-link @if(request()->path() == '/brand') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Brand') }}</p>
                             </a>
                         </li>
                     </ul>
