@@ -27,7 +27,7 @@
                 @endif">
                         <i class="nav-icon fas fas fa-cog"></i>
                         <p>
-                            {{ __('General Setting') }}
+                            {{ __('Products Setting') }}
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
