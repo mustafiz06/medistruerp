@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,10 @@ Route::post('/brand/store', [BrandController::class, 'store'])->name('brand.stor
 Route::post('/brand/delete/{id}/', [BrandController::class, 'delete'])->name('brand.delete');
 Route::post('/brand/status/{id}/', [BrandController::class, 'status'])->name('brand.status');
 Route::post('/brand/edit/{id}/', [BrandController::class, 'edit'])->name('brand.edit');
+
+
+Route::get('/country', [CountryController::class, 'index'])->name('country.index');
+Route::post('/country/store', [CountryController::class, 'store'])->name('country.store');;
+Route::post('/country/delete/{id}/', [CountryController::class, 'delete'])->name('country.delete');
+Route::post('/country/status/{id}/', [CountryController::class, 'status'])->name('country.status');
+Route::post('/country/edit/{id}/', [CountryController::class, 'edit'])->name('country.edit');
