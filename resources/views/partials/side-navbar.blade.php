@@ -64,6 +64,33 @@
                     </ul>
                 </li>
 
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link
+                @if(request()->path() == '/accountsetting/') active
+                @endif">
+                        <i class="nav-icon fas fas fa-cog"></i>
+                        <p>
+                            {{ __('Accounts Setting') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{route('paymentMethod.index')}}"
+                                class="nav-link @if(request()->path() == '/accountsetting/paymentmethod') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Payment Method') }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+
+
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

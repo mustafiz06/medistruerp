@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\accountSetting\PaymentMethodController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CountryController;
@@ -49,3 +50,10 @@ Route::post('/country/store', [CountryController::class, 'store'])->name('countr
 Route::post('/country/delete/{id}/', [CountryController::class, 'delete'])->name('country.delete');
 Route::post('/country/status/{id}/', [CountryController::class, 'status'])->name('country.status');
 Route::post('/country/edit/{id}/', [CountryController::class, 'edit'])->name('country.edit');
+
+
+Route::get('/accountsetting/paymentmethod', [PaymentMethodController::class, 'index'])->name('paymentMethod.index');
+Route::post('/accountsetting/paymentmethod/store', [PaymentMethodController::class, 'store'])->name('paymentMethod.store');;
+Route::post('/accountsetting/paymentmethod/delete/{id}/', [PaymentMethodController::class, 'delete'])->name('paymentMethod.delete');
+Route::post('/accountsetting/paymentmethod/status/{id}/', [PaymentMethodController::class, 'status'])->name('paymentMethod.status');
+Route::post('/accountsetting/paymentmethod/edit/{id}/', [PaymentMethodController::class, 'edit'])->name('paymentMethod.edit');
