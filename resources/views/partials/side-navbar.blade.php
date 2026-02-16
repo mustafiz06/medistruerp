@@ -83,6 +83,14 @@
                                 <p>{{ __('Payment Method') }}</p>
                             </a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a href="{{route('expenseHead.index')}}"
+                                class="nav-link @if(request()->path() == '/accountsetting/expensehead') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Expense Head') }}</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -57,3 +58,11 @@ Route::post('/accountsetting/paymentmethod/store', [PaymentMethodController::cla
 Route::post('/accountsetting/paymentmethod/delete/{id}/', [PaymentMethodController::class, 'delete'])->name('paymentMethod.delete');
 Route::post('/accountsetting/paymentmethod/status/{id}/', [PaymentMethodController::class, 'status'])->name('paymentMethod.status');
 Route::post('/accountsetting/paymentmethod/edit/{id}/', [PaymentMethodController::class, 'edit'])->name('paymentMethod.edit');
+
+
+
+Route::get('/accountsetting/expensehead', [ExpenseHeadController::class, 'index'])->name('expenseHead.index');
+Route::post('/accountsetting/expensehead/store', [ExpenseHeadController::class, 'store'])->name('expenseHead.store');;
+Route::post('/accountsetting/expensehead/delete/{id}/', [ExpenseHeadController::class, 'delete'])->name('expenseHead.delete');
+Route::post('/accountsetting/expensehead/status/{id}/', [ExpenseHeadController::class, 'status'])->name('expenseHead.status');
+Route::post('/accountsetting/expensehead/edit/{id}/', [ExpenseHeadController::class, 'edit'])->name('expenseHead.edit');
