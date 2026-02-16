@@ -136,7 +136,7 @@
 
     function editpaymentMethod(id, title, status) {
         let form = document.getElementById('paymentMethodForm');
-        form.action = '/paymentMethod/edit/' + id;
+        form.action = '/accountsetting/paymentmethod/edit/' + id;
 
         document.getElementById('paymentMethod_id').value = id;
         document.getElementById('title').value = title;

@@ -146,7 +146,7 @@
 
     function editunit(id, title, status) {
         let form = document.getElementById('unitForm');
-        form.action = '/unit/edit/' + id;
+        form.action = '/productsetting/unit/edit/' + id;
 
         document.getElementById('unit_id').value = id;
         document.getElementById('title').value = title;

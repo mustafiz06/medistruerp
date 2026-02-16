@@ -166,7 +166,7 @@
 
     function editcategory(id, title, slug, status) {
         let form = document.getElementById('categoryForm');
-        form.action = '/dashboard/category/update/' + id;
+        form.action = '/productsetting/category/update/' + id;
 
         document.getElementById('category_id').value = id;
         document.getElementById('title').value = title;

@@ -136,7 +136,7 @@
 
     function editexpenseHead(id, title, status) {
         let form = document.getElementById('expenseHeadForm');
-        form.action = '/expenseHead/edit/' + id;
+        form.action = '/accountsetting/expensehead/edit/' + id;
 
         document.getElementById('expenseHead_id').value = id;
         document.getElementById('title').value = title;

@@ -166,7 +166,7 @@
 
     function editbrand(id, title, slug, status) {
         let form = document.getElementById('brandForm');
-        form.action = '/brand/edit/' + id;
+        form.action = '/productsetting/brand/edit/' + id;
 
         document.getElementById('brand_id').value = id;
         document.getElementById('title').value = title;

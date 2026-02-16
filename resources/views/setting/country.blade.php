@@ -136,7 +136,7 @@
 
     function editcountry(id, title, status) {
         let form = document.getElementById('countryForm');
-        form.action = '/country/edit/' + id;
+        form.action = '/productsetting/country/edit/' + id;
 
         document.getElementById('country_id').value = id;
         document.getElementById('title').value = title;
