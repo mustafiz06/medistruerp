@@ -10,7 +10,7 @@ class CountryController extends Controller
     public function index()
     {
         $countries = Country::all();
-        return view('setting.country', compact('countries'));
+        return view('productSetting.country', compact('countries'));
     }
 
 
