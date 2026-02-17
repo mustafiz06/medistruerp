@@ -1,4 +1,4 @@
-@extends('dashboard.layout')
+@extends('layout')
 
 @section('content')
 <!-- Content Header (Page header) -->
