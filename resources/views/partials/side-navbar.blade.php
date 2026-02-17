@@ -1,107 +1,108 @@
-<aside class="main-sidebar elevation-4 main-sidebar elevation-4 sidebar-light-primary">
-    <!-- Sidebar -->
+<aside class="main-sidebar elevation-4 sidebar-light-primary">
     <div class="sidebar pt-0 mt-0">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel">
-            <a href="" class="name text-dark" target="_blank">
-                <img src="" alt="Logo">
+
+        <!-- Logo -->
+        <div class="user-panel text-center py-3">
+            <a href="{{ route('home') }}" class="d-block">
+                <img src="{{ asset('logo.png') }}" alt="Logo" style="max-height:50px;">
             </a>
         </div>
+
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview" role="menu"
+            <ul class="nav nav-pills nav-sidebar flex-column"
+                data-widget="treeview" role="menu"
                 data-accordion="false">
+
+                <!-- Dashboard -->
                 <li class="nav-item">
-                    <a href="#"
-                        class="nav-link @if(request()->path() == '/') active @endif">
+                    <a href="{{ route('home') }}"
+                       class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            {{ __('Dashboard') }}
-                        </p>
+                        <p>{{ __('Dashboard') }}</p>
                     </a>
                 </li>
 
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link
-                @if(request()->path() == '/') active
-                @endif">
-                        <i class="nav-icon fas fas fa-cog"></i>
+                <!-- Product Settings -->
+                <li class="nav-item has-treeview {{ request()->is('productsetting/*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                       class="nav-link {{ request()->is('productsetting/*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             {{ __('Products Setting') }}
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href="{{route('category.index')}}"
-                                class="nav-link @if(request()->path() == '/category') active @endif">
+                            <a href="{{ route('category.index') }}"
+                               class="nav-link {{ request()->routeIs('category.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Category') }}</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="{{route('unit.index')}}"
-                                class="nav-link @if(request()->path() == '/unit') active @endif">
+                            <a href="{{ route('unit.index') }}"
+                               class="nav-link {{ request()->routeIs('unit.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Unit') }}</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="{{route('brand.index')}}"
-                                class="nav-link @if(request()->path() == '/brand') active @endif">
+                            <a href="{{ route('brand.index') }}"
+                               class="nav-link {{ request()->routeIs('brand.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Brand') }}</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="{{route('country.index')}}"
-                                class="nav-link @if(request()->path() == '/country') active @endif">
+                            <a href="{{ route('country.index') }}"
+                               class="nav-link {{ request()->routeIs('country.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Country') }}</p>
                             </a>
                         </li>
+
                     </ul>
                 </li>
 
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link
-                @if(request()->path() == '/accountsetting/') active
-                @endif">
-                        <i class="nav-icon fas fas fa-cog"></i>
+                <!-- Accounts Settings -->
+                <li class="nav-item has-treeview {{ request()->is('accountsetting/*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                       class="nav-link {{ request()->is('accountsetting/*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             {{ __('Accounts Setting') }}
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href="{{route('paymentMethod.index')}}"
-                                class="nav-link @if(request()->path() == '/accountsetting/paymentmethod') active @endif">
+                            <a href="{{ route('paymentMethod.index') }}"
+                               class="nav-link {{ request()->routeIs('paymentMethod.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Payment Method') }}</p>
                             </a>
                         </li>
-                        
+
                         <li class="nav-item">
-                            <a href="{{route('expenseHead.index')}}"
-                                class="nav-link @if(request()->path() == '/accountsetting/expensehead') active @endif">
+                            <a href="{{ route('expenseHead.index') }}"
+                               class="nav-link {{ request()->routeIs('expenseHead.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Expense Head') }}</p>
                             </a>
                         </li>
+
                     </ul>
                 </li>
-
-
-
-
-
-
             </ul>
         </nav>
-        <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
 </aside>

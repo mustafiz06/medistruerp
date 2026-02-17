@@ -57,7 +57,7 @@
 <footer class="main-footer">
     <div class="d-inline">Copyright Reserved</div>
     <div class="float-right d-none d-sm-inline-block">
-      {{ __('Version : 3.1') }}
+      {{ __('Version : 1.1') }}
     </div>
   </footer>
 </div>
