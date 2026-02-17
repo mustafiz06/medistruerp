@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\productSetting;
 
-use App\Models\Brand;
+use App\Http\Controllers\Controller;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
-class BrandController extends Controller
+class CountryController extends Controller
 {
     public function index()
     {
-        $brands = Brand::all();
-        return view('productSetting.brand', compact('brands'));
+        $countries = Country::all();
+        return view('productSetting.country', compact('countries'));
     }
 
 
@@ -18,18 +19,15 @@ class BrandController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:191',
-            'slug' => 'nullable|string',
-            'status' => 'required|boolean',
         ]);
 
-        Brand::create([
+        Country::create([
             'title' => $request->title,
-            'slug' => $request->slug,
-            'status' => $request->status,
+            'status' => 1,
         ]);
 
         $notification = array(
-                'messege' => 'Brand Added successfully!',
+                'messege' => 'country Added successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
@@ -39,13 +37,13 @@ class BrandController extends Controller
     public function delete($id)
     {
 
-        $brand = Brand::findOrFail($id);
+        $country = Country::findOrFail($id);
 
 
-        $brand->delete();
+        $country->delete();
 
         $notification = array(
-                'messege' => 'Brand Deleted successfully!',
+                'messege' => 'country Delete successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
@@ -54,23 +52,23 @@ class BrandController extends Controller
 
     public function status($id)
     {
-        $brand = Brand::where('id', $id)->first();
+        $country = Country::where('id', $id)->first();
 
-        if ($brand->status == 1) {
-            $brand = Brand::find($id);
-            $brand->status = 0;
-            $brand->created_at = now();
-            $brand->save();
+        if ($country->status == 1) {
+            $country = Country::find($id);
+            $country->status = 0;
+            $country->created_at = now();
+            $country->save();
             $notification = array(
                 'messege' => 'status change successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
         } else {
-            $brand = Brand::find($id);
-            $brand->status = 1;
-            $brand->created_at = now();
-            $brand->save();
+            $country = Country::find($id);
+            $country->status = 1;
+            $country->created_at = now();
+            $country->save();
             $notification = array(
                 'messege' => 'status change successfully!',
                 'alert' => 'success'
@@ -84,17 +82,13 @@ class BrandController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:brands,slug,' . $id,
-            'status' => 'required|in:0,1',
         ]);
 
-        $brand = Brand::findOrFail($id);
-        $brand->title = $request->title;
-        $brand->slug = $request->slug;
-        $brand->status = $request->status;
-        $brand->save();
+        $country = Country::findOrFail($id);
+        $country->title = $request->title;
+        $country->save();
         $notification = array(
-                'messege' => 'Brand Update successfully!',
+                'messege' => 'country Updated successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);

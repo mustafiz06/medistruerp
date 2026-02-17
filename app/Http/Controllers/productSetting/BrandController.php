@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\productSetting;
 
-use App\Models\Unit;
+use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
-class UnitController extends Controller
+class BrandController extends Controller
 {
     public function index()
     {
-        $units = Unit::all();
-        return view('productSetting.unit', compact('units'));
+        $brands = Brand::all();
+        return view('productSetting.brand', compact('brands'));
     }
 
 
@@ -18,16 +19,18 @@ class UnitController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:191',
+            'slug' => 'nullable|string',
             'status' => 'required|boolean',
         ]);
 
-        Unit::create([
+        Brand::create([
             'title' => $request->title,
+            'slug' => $request->slug,
             'status' => $request->status,
         ]);
 
         $notification = array(
-                'messege' => 'Unit Added successfully!',
+                'messege' => 'Brand Added successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
@@ -37,13 +40,13 @@ class UnitController extends Controller
     public function delete($id)
     {
 
-        $unit = Unit::findOrFail($id);
+        $brand = Brand::findOrFail($id);
 
 
-        $unit->delete();
+        $brand->delete();
 
         $notification = array(
-                'messege' => 'Unit Delete successfully!',
+                'messege' => 'Brand Deleted successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
@@ -52,23 +55,23 @@ class UnitController extends Controller
 
     public function status($id)
     {
-        $unit = Unit::where('id', $id)->first();
+        $brand = Brand::where('id', $id)->first();
 
-        if ($unit->status == 1) {
-            $unit = Unit::find($id);
-            $unit->status = 0;
-            $unit->created_at = now();
-            $unit->save();
+        if ($brand->status == 1) {
+            $brand = Brand::find($id);
+            $brand->status = 0;
+            $brand->created_at = now();
+            $brand->save();
             $notification = array(
                 'messege' => 'status change successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);
         } else {
-            $unit = Unit::find($id);
-            $unit->status = 1;
-            $unit->created_at = now();
-            $unit->save();
+            $brand = Brand::find($id);
+            $brand->status = 1;
+            $brand->created_at = now();
+            $brand->save();
             $notification = array(
                 'messege' => 'status change successfully!',
                 'alert' => 'success'
@@ -82,15 +85,17 @@ class UnitController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:brands,slug,' . $id,
             'status' => 'required|in:0,1',
         ]);
 
-        $unit = Unit::findOrFail($id);
-        $unit->title = $request->title;
-        $unit->status = $request->status;
-        $unit->save();
+        $brand = Brand::findOrFail($id);
+        $brand->title = $request->title;
+        $brand->slug = $request->slug;
+        $brand->status = $request->status;
+        $brand->save();
         $notification = array(
-                'messege' => 'Unit Updatd successfully!',
+                'messege' => 'Brand Update successfully!',
                 'alert' => 'success'
             );
             return redirect()->back()->with('notification', $notification);

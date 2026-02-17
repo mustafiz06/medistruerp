@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\productSetting\BrandController;
+use App\Http\Controllers\productSetting\CategoryController;
+use App\Http\Controllers\productSetting\CountryController;
+use App\Http\Controllers\productSetting\UnitController;
 use Illuminate\Support\Facades\Route;
 
 /*
