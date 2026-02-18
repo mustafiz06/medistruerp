@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\productSetting\BrandController;
 use App\Http\Controllers\productSetting\CategoryController;
 use App\Http\Controllers\productSetting\CountryController;
@@ -66,3 +67,12 @@ Route::post('/accountsetting/expensehead/store', [ExpenseHeadController::class, 
 Route::post('/accountsetting/expensehead/delete/{id}/', [ExpenseHeadController::class, 'delete'])->name('expenseHead.delete');
 Route::post('/accountsetting/expensehead/status/{id}/', [ExpenseHeadController::class, 'status'])->name('expenseHead.status');
 Route::post('/accountsetting/expensehead/edit/{id}/', [ExpenseHeadController::class, 'edit'])->name('expenseHead.edit');
+
+
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::get('/customer/add', [CustomerController::class, 'add'])->name('customer.add');
+Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');;
+Route::post('/customer/delete/{id}/', [CustomerController::class, 'delete'])->name('customer.delete');
+Route::post('/customer/status/{id}/', [CustomerController::class, 'status'])->name('customer.status');
+Route::get('/customer/edit', [CustomerController::class, 'edit_view'])->name('customer.edit');
+Route::post('/customer/edit/{id}/', [CustomerController::class, 'edit'])->name('customer.edit');

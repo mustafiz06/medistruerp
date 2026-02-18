@@ -17,7 +17,7 @@
                 <!-- Dashboard -->
                 <li class="nav-item">
                     <a href="{{ route('home') }}"
-                       class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                        class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>{{ __('Dashboard') }}</p>
                     </a>
@@ -26,7 +26,7 @@
                 <!-- Product Settings -->
                 <li class="nav-item has-treeview {{ request()->is('productsetting/*') ? 'menu-open' : '' }}">
                     <a href="#"
-                       class="nav-link {{ request()->is('productsetting/*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('productsetting/*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             {{ __('Products Setting') }}
@@ -38,7 +38,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('category.index') }}"
-                               class="nav-link {{ request()->routeIs('category.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('category.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Category') }}</p>
                             </a>
@@ -46,7 +46,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('unit.index') }}"
-                               class="nav-link {{ request()->routeIs('unit.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('unit.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Unit') }}</p>
                             </a>
@@ -54,7 +54,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('brand.index') }}"
-                               class="nav-link {{ request()->routeIs('brand.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('brand.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Brand') }}</p>
                             </a>
@@ -62,7 +62,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('country.index') }}"
-                               class="nav-link {{ request()->routeIs('country.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('country.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Country') }}</p>
                             </a>
@@ -74,7 +74,7 @@
                 <!-- Accounts Settings -->
                 <li class="nav-item has-treeview {{ request()->is('accountsetting/*') ? 'menu-open' : '' }}">
                     <a href="#"
-                       class="nav-link {{ request()->is('accountsetting/*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('accountsetting/*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             {{ __('Accounts Setting') }}
@@ -86,7 +86,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('paymentMethod.index') }}"
-                               class="nav-link {{ request()->routeIs('paymentMethod.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('paymentMethod.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Payment Method') }}</p>
                             </a>
@@ -94,7 +94,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('expenseHead.index') }}"
-                               class="nav-link {{ request()->routeIs('expenseHead.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('expenseHead.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Expense Head') }}</p>
                             </a>
@@ -102,6 +102,39 @@
 
                     </ul>
                 </li>
+
+                <!-- Customer -->
+                <li class="nav-item has-treeview {{ request()->routeIs('customer.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ request()->routeIs('customer.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            {{ __('Customers') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('customer.add') }}"
+                                class="nav-link {{ request()->routeIs('customer.add') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Add Customer') }}</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('customer.index') }}"
+                                class="nav-link {{ request()->routeIs('customer.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Customers list') }}</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             </ul>
         </nav>
     </div>

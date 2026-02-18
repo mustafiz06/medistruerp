@@ -1,0 +1,95 @@
+@extends('layout')
+
+@section('content')
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ __('customer') }}</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href=""><i class="fas fa-home"></i>{{ __('Home') }}</a></li>
+                    <li class="breadcrumb-item">{{ __('customer') }}</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title mt-1">{{ __('Add customer') }}</h3>
+                        <div class="card-tools">
+                            <a href="" class="btn btn-primary btn-sm">
+                                <i class="fas fa-angle-double-left"></i> {{ __('Back') }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <form id="customerForm" class="form-horizontal" action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-2 control-label">{{ __('Customer Name') }}<span class="text-danger">*</span></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="{{ __('Customer Name') }}" value="{{ old('name') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="designation" class="col-sm-2 control-label">{{ __('Designation') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="designation" id="designation" placeholder="{{ __('Designation') }}" value="{{ old('designation') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="address" class="col-sm-2 control-label">{{ __('Address') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="address" id="address" placeholder="{{ __('Address') }}" value="{{ old('address') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="contact" class="col-sm-2 control-label">{{ __('Phone Number') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="contact" id="contact" placeholder="{{ __('Phone Number') }}" value="{{ old('contact') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="responsible_person" class="col-sm-2 control-label">{{ __('Responsible Person') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="responsible_person" id="responsible_person" placeholder="{{ __('Responsible Person') }}" value="{{ old('responsible_person') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="responsible_person_contact" class="col-sm-2 control-label">{{ __('Responsible Person Contact') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="responsible_person_contact" id="responsible_person_contact" placeholder="{{ __('Responsible Person Contact') }}" value="{{ old('responsible_person_contact') }}">
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="formSubmitBtn">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+@endsection
