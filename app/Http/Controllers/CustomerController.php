@@ -34,7 +34,9 @@ class CustomerController extends Controller
             'messege' => 'customer Added successfully!',
             'alert' => 'success'
         );
-        return redirect()->back()->with('notification', $notification);
+        return redirect()
+            ->route('customer.index')
+            ->with('notification', $notification);
     }
 
     public function delete($id)
@@ -75,8 +77,12 @@ class CustomerController extends Controller
 
         $customer->update($request->all());
 
+        $notification = array(
+            'messege' => 'customer updated successfully!',
+            'alert' => 'success'
+        );
         return redirect()
             ->route('customer.index')
-            ->with('success', 'Customer updated successfully.');
+            ->with('notification', $notification);
     }
 }
