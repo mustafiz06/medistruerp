@@ -74,5 +74,5 @@ Route::get('/customer/add', [CustomerController::class, 'add'])->name('customer.
 Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');;
 Route::post('/customer/delete/{id}/', [CustomerController::class, 'delete'])->name('customer.delete');
 Route::post('/customer/status/{id}/', [CustomerController::class, 'status'])->name('customer.status');
-Route::get('/customer/edit', [CustomerController::class, 'edit_view'])->name('customer.edit');
-Route::post('/customer/edit/{id}/', [CustomerController::class, 'edit'])->name('customer.edit');
+Route::get('/customer/edit/{id}', [CustomerController::class, 'edit_view'])->name('customer.edit.view');
+Route::post('/customer/edit/{id}/', [CustomerController::class, 'update'])->name('customer.update');

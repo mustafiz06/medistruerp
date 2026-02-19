@@ -12,14 +12,10 @@ class CustomerController extends Controller
         $customers = Customer::all();
         return view('customer/customer', compact('customers'));
     }
-public function add()
+    public function add()
     {
         return view('customer/customerAdd');
     }
-
-
-
-
     public function store(Request $request)
     {
         $request->validate([
@@ -41,11 +37,6 @@ public function add()
         return redirect()->back()->with('notification', $notification);
     }
 
-
-
-
-
-
     public function delete($id)
     {
 
@@ -62,52 +53,30 @@ public function add()
     }
 
 
-    public function status($id)
+
+    public function edit_view($id)
     {
-        $customer = Customer::where('id', $id)->first();
-
-        if ($customer->status == 1) {
-            $customer = Customer::find($id);
-            $customer->status = 0;
-            $customer->created_at = now();
-            $customer->save();
-            $notification = array(
-                'messege' => 'Status change successfully!',
-                'alert' => 'success'
-            );
-            return redirect()->back()->with('notification', $notification);
-        } else {
-            $customer = Customer::find($id);
-            $customer->status = 1;
-            $customer->created_at = now();
-            $customer->save();
-            $notification = array(
-                'messege' => 'status change successfully!',
-                'alert' => 'success'
-            );
-            return redirect()->back()->with('notification', $notification);
-        }
+        $customer = Customer::findOrFail($id);
+        return view('customer/customerEdit', compact('customer'));
     }
-
 
     public function update(Request $request, $id)
     {
+        $customer = Customer::findOrFail($id);
+
         $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:brands,slug,' . $id,
-            'status' => 'required|in:0,1',
+            'name' => 'required|string|max:255',
+            'designation' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'contact' => 'nullable|string|max:50',
+            'responsible_person' => 'nullable|string|max:255',
+            'responsible_person_contact' => 'nullable|string|max:50',
         ]);
 
-        $customer = Customer::findOrFail($id);
-        $customer->title = $request->title;
-        $customer->slug = $request->slug;
-        $customer->status = $request->status;
-        $customer->save();
-        $notification = array(
-            'messege' => 'customer Updated successfully!',
-            'alert' => 'success'
-        );
-        return redirect()->back()->with('notification', $notification);
+        $customer->update($request->all());
+
+        return redirect()
+            ->route('customer.index')
+            ->with('success', 'Customer updated successfully.');
     }
 }
-

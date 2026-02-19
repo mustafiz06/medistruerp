@@ -38,14 +38,10 @@
                                         <td>{{$customer->responsible_person_contact}}</td>
                                         <td>
 
-
-
-                                            <button type="button" class="btn btn-info btn-sm"
-                                                onclick="editcustomer('{{ $customer->id }}', '{{ $customer->title }}', '{{ $customer->slug }}', '{{ $customer->update }}')">
+                                            <a href="{{ route('customer.edit.view', $customer->id) }}"
+                                                class="btn btn-info btn-sm">
                                                 <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-
-
+                                            </a>
 
 
                                             <form id="deleteform" class="d-inline-block" action="{{ route('customer.delete', $customer->id ) }}" method="post">
