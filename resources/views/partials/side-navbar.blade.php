@@ -135,6 +135,39 @@
                     </ul>
                 </li>
 
+
+                <!-- Supplier -->
+                <li class="nav-item has-treeview {{ request()->routeIs('supplier.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ request()->routeIs('supplier.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-store"></i>
+                        <p>
+                            {{ __('Suppliers') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('supplier.add') }}"
+                                class="nav-link {{ request()->routeIs('supplier.add') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Add Supplier') }}</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('supplier.index') }}"
+                                class="nav-link {{ request()->routeIs('supplier.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Suppliers list') }}</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             </ul>
         </nav>
     </div>

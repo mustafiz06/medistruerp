@@ -7,6 +7,7 @@ use App\Http\Controllers\productSetting\BrandController;
 use App\Http\Controllers\productSetting\CategoryController;
 use App\Http\Controllers\productSetting\CountryController;
 use App\Http\Controllers\productSetting\UnitController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,3 +77,12 @@ Route::post('/customer/delete/{id}/', [CustomerController::class, 'delete'])->na
 Route::post('/customer/status/{id}/', [CustomerController::class, 'status'])->name('customer.status');
 Route::get('/customer/edit/{id}', [CustomerController::class, 'edit_view'])->name('customer.edit.view');
 Route::post('/customer/edit/{id}/', [CustomerController::class, 'update'])->name('customer.update');
+
+
+Route::get('/supplier', [SupplierController::class, 'index'])->name('supplier.index');
+Route::get('/supplier/add', [SupplierController::class, 'add'])->name('supplier.add');
+Route::post('/supplier/store', [SupplierController::class, 'store'])->name('supplier.store');;
+Route::post('/supplier/delete/{id}/', [SupplierController::class, 'delete'])->name('supplier.delete');
+Route::post('/supplier/status/{id}/', [SupplierController::class, 'status'])->name('supplier.status');
+Route::get('/supplier/edit/{id}', [SupplierController::class, 'edit_view'])->name('supplier.edit.view');
+Route::post('/supplier/edit/{id}/', [SupplierController::class, 'update'])->name('supplier.update');
