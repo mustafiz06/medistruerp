@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\productSetting\BrandController;
 use App\Http\Controllers\productSetting\CategoryController;
 use App\Http\Controllers\productSetting\CountryController;
+use App\Http\Controllers\productSetting\ProductController;
 use App\Http\Controllers\productSetting\UnitController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -86,3 +87,13 @@ Route::post('/supplier/delete/{id}/', [SupplierController::class, 'delete'])->na
 Route::post('/supplier/status/{id}/', [SupplierController::class, 'status'])->name('supplier.status');
 Route::get('/supplier/edit/{id}', [SupplierController::class, 'edit_view'])->name('supplier.edit.view');
 Route::post('/supplier/edit/{id}/', [SupplierController::class, 'update'])->name('supplier.update');
+
+
+
+Route::get('/productsetting/product', [ProductController::class, 'index'])->name('product.index');
+Route::get('/productsetting/product/add', [ProductController::class, 'add'])->name('product.add');
+Route::post('/productsetting/product/store', [ProductController::class, 'store'])->name('product.store');;
+Route::post('/productsetting/product/delete/{id}/', [ProductController::class, 'delete'])->name('product.delete');
+Route::post('/productsetting/product/status/{id}/', [ProductController::class, 'status'])->name('product.status');
+Route::get('/productsetting/product/edit/{id}', [ProductController::class, 'edit_view'])->name('product.edit.view');
+Route::post('/productsetting/product/edit/{id}/', [ProductController::class, 'update'])->name('product.update');

@@ -35,6 +35,13 @@
                     </a>
 
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('product.index') }}"
+                                class="nav-link {{ request()->routeIs('product.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('products') }}</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('category.index') }}"
