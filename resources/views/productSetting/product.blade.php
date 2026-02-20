@@ -8,7 +8,7 @@
             <div class="col-md-12">
 
                 <div class="card card-primary card-outline">
-                    <<div class="card-header">
+                    <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h3 class="card-title mb-0">Product List</h3>
 
