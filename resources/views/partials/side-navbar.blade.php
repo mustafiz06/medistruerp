@@ -27,7 +27,7 @@
                 <li class="nav-item has-treeview {{ request()->is('productsetting/*') ? 'menu-open' : '' }}">
                     <a href="#"
                         class="nav-link {{ request()->is('productsetting/*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-cogs"></i>
+                        <i class="nav-icon fas fa-box-open"></i>
                         <p>
                             {{ __('Products Setting') }}
                             <i class="right fas fa-angle-left"></i>
@@ -75,7 +75,7 @@
                 <li class="nav-item has-treeview {{ request()->is('accountsetting/*') ? 'menu-open' : '' }}">
                     <a href="#"
                         class="nav-link {{ request()->is('accountsetting/*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-cogs"></i>
+                        <i class="nav-icon fas fa-coins"></i>
                         <p>
                             {{ __('Accounts Setting') }}
                             <i class="right fas fa-angle-left"></i>
