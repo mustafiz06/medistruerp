@@ -105,10 +105,8 @@ Route::post('/productsetting/product/edit/{id}/', [ProductController::class, 'up
 Route::get('/productsetting/barcode/generate/{product}', [BarcodeController::class, 'generate'])->name('product.barcode.generate');
 
 
-
-
-Route::prefix('stock')->group(function(){
-    Route::get('/opening', [StockController::class,'openingStockForm'])->name('stock.openingForm');
-    Route::post('/opening/save', [StockController::class,'openingStockSave'])->name('stock.openingSave');
+Route::prefix('stock')->group(function () {
+    Route::get('/opening', [StockController::class, 'openingStockForm'])->name('stock.openingForm');
+    Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
 
 });

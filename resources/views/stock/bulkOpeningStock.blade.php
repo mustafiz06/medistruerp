@@ -1,10 +1,25 @@
 @extends('layout')
 @section('content')
 <div class="container my-4">
-    <h4>Opening Stock</h4>
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Opening Stock</h4>
+        <p>
+            <a href="#" class="btn btn-outline-dark btn-sm me-2">
+                <i class="fas fa-file-export me-1"></i>Export CSV
+            </a>
+            <label class="btn btn-outline-dark btn-sm mb-0">
+                <i class="fas fa-file-import me-1"></i> Import CSV
+                <form action="#" method="POST" enctype="multipart/form-data" class="d-inline">
+                    @csrf
+                    <input type="file" name="csv_file" class="d-none" onchange="this.form.submit()">
+                </form>
+            </label>
+        </p>
+    </div>
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+
 
     <form action="{{ route('stock.openingSave') }}" method="POST">
         @csrf
