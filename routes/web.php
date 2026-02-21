@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
+use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\productSetting\BrandController;
 use App\Http\Controllers\productSetting\CategoryController;
@@ -97,3 +98,7 @@ Route::post('/productsetting/product/delete/{id}/', [ProductController::class, '
 Route::post('/productsetting/product/status/{id}/', [ProductController::class, 'status'])->name('product.status');
 Route::get('/productsetting/product/edit/{id}', [ProductController::class, 'edit_view'])->name('product.edit.view');
 Route::post('/productsetting/product/edit/{id}/', [ProductController::class, 'update'])->name('product.update');
+
+
+
+Route::get('/productsetting/barcode/generate/{product}', [BarcodeController::class, 'generate'])->name('product.barcode.generate');
