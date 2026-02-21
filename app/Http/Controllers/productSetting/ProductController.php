@@ -39,9 +39,7 @@ class ProductController extends Controller
             'origin_id'      => 'nullable|exists:countries,id',
             'purchase_price' => 'nullable|numeric|min:0',
             'sales_price'    => 'nullable|numeric|min:0',
-            'stock_quantity' => 'nullable|integer|min:0',
             'alert_quantity' => 'nullable|integer|min:0',
-            'barcode'        => 'nullable|string|max:255|unique:products,barcode',
         ]);
 
         $sku = $validated['sku'] ?? 'SKU-' . strtoupper(uniqid());
@@ -49,10 +47,6 @@ class ProductController extends Controller
             $sku = 'SKU-' . strtoupper(uniqid());
         }
 
-        $barcode = $validated['barcode'] ?? rand(1000000000, 9999999999);
-        while (Product::where('barcode', $barcode)->exists()) {
-            $barcode = rand(1000000000, 9999999999);
-        }
 
         Product::create([
             'name'           => $validated['name'],
@@ -64,9 +58,7 @@ class ProductController extends Controller
             'origin_id'      => $validated['origin_id'] ?? null,
             'purchase_price' => $validated['purchase_price'] ?? 0,
             'sales_price'    => $validated['sales_price'] ?? 0,
-            'stock_quantity' => $validated['stock_quantity'] ?? 0,
             'alert_quantity' => $validated['alert_quantity'] ?? 0,
-            'barcode'        => $barcode,
             'is_active'      => '1',
         ]);
 

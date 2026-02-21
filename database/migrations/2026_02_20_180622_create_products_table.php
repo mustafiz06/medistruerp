@@ -24,9 +24,7 @@ return new class extends Migration
             $table->string('origin_id')->nullable();
             $table->decimal('purchase_price', 15, 2)->nullable();
             $table->decimal('sales_price', 15, 2)->nullable();
-            $table->integer('stock_quantity')->default(0);
             $table->integer('alert_quantity')->default(0);
-            $table->string('barcode')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
