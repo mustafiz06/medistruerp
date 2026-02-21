@@ -78,6 +78,32 @@
                     </ul>
                 </li>
 
+                <!-- Stock -->
+                <li class="nav-item has-treeview {{ request()->routeIs('stock.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ request()->routeIs('stock.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            {{ __('Stock') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('stock.openingForm') }}"
+                                class="nav-link {{ request()->routeIs('stock.openingForm') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Opening Stock') }}</p>
+                            </a>
+                        </li>
+
+                        
+
+                    </ul>
+                </li>
+
                 <!-- Accounts Settings -->
                 <li class="nav-item has-treeview {{ request()->is('accountsetting/*') ? 'menu-open' : '' }}">
                     <a href="#"

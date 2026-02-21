@@ -9,6 +9,7 @@ use App\Http\Controllers\productSetting\CategoryController;
 use App\Http\Controllers\productSetting\CountryController;
 use App\Http\Controllers\productSetting\ProductController;
 use App\Http\Controllers\productSetting\UnitController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -102,3 +103,12 @@ Route::post('/productsetting/product/edit/{id}/', [ProductController::class, 'up
 
 
 Route::get('/productsetting/barcode/generate/{product}', [BarcodeController::class, 'generate'])->name('product.barcode.generate');
+
+
+
+
+Route::prefix('stock')->group(function(){
+    Route::get('/opening', [StockController::class,'openingStockForm'])->name('stock.openingForm');
+    Route::post('/opening/save', [StockController::class,'openingStockSave'])->name('stock.openingSave');
+
+});
