@@ -93,53 +93,16 @@ class ProductController extends Controller
         );
         return redirect()->back()->with('notification', $notification);
     }
+
+
+    public function edit_view($id)
+    {  
+        $categories = Category::where('status', 1)->get();
+        $brands     = Brand::where('status', 1)->get();
+        $units      = Unit::where('status', 1)->get();
+        $countries  = Country::where('status', 1)->get();
+
+        $product = Product::findOrFail($id);
+        return view('productSetting/productEdit', compact('product', 'categories', 'brands', 'units', 'countries'));
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // public function edit_view($id)
-    // {
-    //     $customer = Customer::findOrFail($id);
-    //     return view('customer/customerEdit', compact('customer'));
-    // }
-
-    // public function update(Request $request, $id)
-    // {
-    //     $customer = Customer::findOrFail($id);
-
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'designation' => 'nullable|string|max:255',
-    //         'address' => 'nullable|string|max:255',
-    //         'contact' => 'nullable|string|max:50',
-    //         'responsible_person' => 'nullable|string|max:255',
-    //         'responsible_person_contact' => 'nullable|string|max:50',
-    //     ]);
-
-    //     $customer->update($request->all());
-
-    //     $notification = array(
-    //         'messege' => 'customer updated successfully!',
-    //         'alert' => 'success'
-    //     );
-    //     return redirect()
-    //         ->route('customer.index')
-    //         ->with('notification', $notification);
-    // }
