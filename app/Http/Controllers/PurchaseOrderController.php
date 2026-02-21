@@ -89,5 +89,21 @@ class PurchaseOrderController extends Controller
         return view('purchase.purchaseOrderList', compact('purchaseOrders'));
     }
 
+    //delte
+    public function destroy ($id)
+    {
+
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+
+
+        $purchaseOrder->delete();
+
+        $notification = array(
+                'messege' => 'Purchase Order Delete successfully!',
+                'alert' => 'success'
+            );
+            return redirect()->back()->with('notification', $notification);
+    }
+
     
 }

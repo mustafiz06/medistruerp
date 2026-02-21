@@ -40,7 +40,7 @@
                                             </a>
 
 
-                                            <form id="deleteform" class="d-inline-block" action="" method="post">
+                                            <form id="deleteform" class="d-inline-block" action="{{ route('po.destroy', $po->id ) }}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $po->id }}">
                                                 <button type="submit" class="btn btn-danger btn-sm" id="delete">
