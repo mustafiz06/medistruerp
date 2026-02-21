@@ -99,6 +99,14 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{ route('po.list') }}"
+                                class="nav-link {{ request()->routeIs('po.list') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Purchase Order') }}</p>
+                            </a>
+                        </li>
+
 
 
                     </ul>

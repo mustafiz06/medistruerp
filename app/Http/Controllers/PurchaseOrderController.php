@@ -76,8 +76,17 @@ class PurchaseOrderController extends Controller
             'alert' => 'success'
         );
         return redirect()
-            ->route('po.create')
+            ->route('po.list')
             ->with('notification', $notification);
+    }
+
+
+    //===============================================================================
+
+    public function poList()
+    {
+        $purchaseOrders = PurchaseOrder::all();
+        return view('purchase.purchaseOrderList', compact('purchaseOrders'));
     }
 
     

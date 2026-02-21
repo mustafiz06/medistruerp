@@ -112,6 +112,7 @@ Route::prefix('stock')->group(function () {
 
 
 Route::prefix('purchase-orders')->group(function () {
+    Route::get('/', [PurchaseOrderController::class, 'poList'])->name('po.list');
     Route::get('/add', [PurchaseOrderController::class, 'create'])->name('po.create');
     Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
