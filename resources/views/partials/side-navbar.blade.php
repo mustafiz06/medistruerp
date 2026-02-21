@@ -107,7 +107,7 @@
                 <li class="nav-item has-treeview {{ request()->routeIs('stock.*') ? 'menu-open' : '' }}">
                     <a href="#"
                         class="nav-link {{ request()->routeIs('stock.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="fas fa-chart-line"></i>
                         <p>
                             {{ __('Stock') }}
                             <i class="right fas fa-angle-left"></i>

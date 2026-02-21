@@ -93,7 +93,7 @@ Route::prefix('customer')->group(function () {
 });
 
 //supplier route
-Route::prefix('customer')->group(function () {
+Route::prefix('supplier')->group(function () {
     Route::get('/', [SupplierController::class, 'index'])->name('supplier.index');
     Route::get('/add', [SupplierController::class, 'add'])->name('supplier.add');
     Route::post('/store', [SupplierController::class, 'store'])->name('supplier.store');;
