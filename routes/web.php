@@ -108,5 +108,5 @@ Route::get('/productsetting/barcode/generate/{product}', [BarcodeController::cla
 Route::prefix('stock')->group(function () {
     Route::get('/opening', [StockController::class, 'openingStockForm'])->name('stock.openingForm');
     Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
-
+    Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
 });

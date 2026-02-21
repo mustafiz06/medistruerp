@@ -101,6 +101,16 @@
 
                         
 
+                        <li class="nav-item">
+                            <a href="{{ route('stock.report') }}"
+                                class="nav-link {{ request()->routeIs('stock.report') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Stock Report') }}</p>
+                            </a>
+                        </li>
+
+                        
+
                     </ul>
                 </li>
 

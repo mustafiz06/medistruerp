@@ -34,7 +34,6 @@ class StockController extends Controller
 
     public function stockReport()
     {
-        $products = Product::with('transactions')->get();
-        return view('stock.stockReport', compact('products'));
+        return view('stock.stockReport');
     }
 }
