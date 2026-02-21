@@ -28,12 +28,6 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">SKU</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="sku" class="form-control" value="{{ old('sku') }}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Description</label>
                         <div class="col-sm-10">
                             <textarea name="description" class="form-control">{{ old('description') }}</textarea>

@@ -30,4 +30,19 @@ class Product extends Model
     {
         return $this->belongsTo(Country::class, 'origin_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($product) {
+
+            do {
+                $sku = rand(1000000000, 9999999999);
+            } while (self::where('sku', $sku)->exists());
+
+            $product->sku = $sku;
+
+        });
+    }
 }

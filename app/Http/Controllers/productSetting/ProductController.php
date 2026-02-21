@@ -31,7 +31,6 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
-            'sku'            => 'nullable|string|max:255|unique:products,sku',
             'description'    => 'nullable|string',
             'category_id'    => 'nullable|exists:categories,id',
             'brand_id'       => 'nullable|exists:brands,id',
@@ -42,15 +41,8 @@ class ProductController extends Controller
             'alert_quantity' => 'nullable|integer|min:0',
         ]);
 
-        $sku = $validated['sku'] ?? 'SKU-' . strtoupper(uniqid());
-        while (Product::where('sku', $sku)->exists()) {
-            $sku = 'SKU-' . strtoupper(uniqid());
-        }
-
-
         Product::create([
             'name'           => $validated['name'],
-            'sku'            => $sku,
             'description'    => $validated['description'] ?? null,
             'category_id'    => $validated['category_id'] ?? null,
             'brand_id'       => $validated['brand_id'] ?? null,
