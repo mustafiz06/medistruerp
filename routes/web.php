@@ -9,7 +9,9 @@ use App\Http\Controllers\productSetting\CategoryController;
 use App\Http\Controllers\productSetting\CountryController;
 use App\Http\Controllers\productSetting\ProductController;
 use App\Http\Controllers\productSetting\UnitController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -106,4 +108,11 @@ Route::prefix('stock')->group(function () {
     Route::get('/opening', [StockController::class, 'openingStockForm'])->name('stock.openingForm');
     Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
     Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
+});
+
+
+Route::prefix('purchase-orders')->group(function () {
+    Route::get('/add', [PurchaseOrderController::class, 'create'])->name('po.create');
+    Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
+    Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
 });

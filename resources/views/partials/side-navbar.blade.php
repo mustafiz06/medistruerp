@@ -77,7 +77,32 @@
 
                     </ul>
                 </li>
+                
+                <!-- Purchase Order -->
+                <li class="nav-item has-treeview {{ request()->routeIs('purchase-orders.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ request()->routeIs('purchase-orders.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-file-invoice"></i>
+                        <p>
+                            {{ __('Purchase Order') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
 
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('po.create') }}"
+                                class="nav-link {{ request()->routeIs('po.create') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Add Purchase Order') }}</p>
+                            </a>
+                        </li>
+
+
+
+                    </ul>
+                </li>
                 <!-- Stock -->
                 <li class="nav-item has-treeview {{ request()->routeIs('stock.*') ? 'menu-open' : '' }}">
                     <a href="#"
@@ -99,7 +124,7 @@
                             </a>
                         </li>
 
-                        
+
 
                         <li class="nav-item">
                             <a href="{{ route('stock.report') }}"
@@ -109,7 +134,7 @@
                             </a>
                         </li>
 
-                        
+
 
                     </ul>
                 </li>
