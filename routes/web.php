@@ -117,4 +117,5 @@ Route::prefix('purchase-orders')->group(function () {
     Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
     Route::post('/destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('po.destroy');
+    Route::get('/view/{id}', [PurchaseOrderController::class, 'view'])->name('po.view');
 });

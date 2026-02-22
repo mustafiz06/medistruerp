@@ -39,7 +39,8 @@
                                 </td>
 
                                 <td>
-                                    <strong>{{ $po->po_number }}</strong>
+                                    <a href="{{ route('po.view', $po->id) }}">{{ $po->po_number }}</a>
+                                    
                                 </td>
 
                                 <td>
@@ -88,7 +89,6 @@
     </div>
 
 </div>
-```
 
 </section>
 

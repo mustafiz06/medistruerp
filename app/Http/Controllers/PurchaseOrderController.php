@@ -105,5 +105,14 @@ class PurchaseOrderController extends Controller
             return redirect()->back()->with('notification', $notification);
     }
 
+
+    //======================================po View============================
+    public function view($id)
+    {
+        $po = PurchaseOrder::findOrFail($id);
+        return view('purchase.purchaseOrderView', compact('po'));
+    }
+    
+
     
 }
