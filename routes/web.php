@@ -3,6 +3,7 @@
 use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
 use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\BusinessSetupController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\productSetting\BrandController;
 use App\Http\Controllers\productSetting\CategoryController;
@@ -118,4 +119,9 @@ Route::prefix('purchase-orders')->group(function () {
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
     Route::post('/destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('po.destroy');
     Route::get('/view/{id}', [PurchaseOrderController::class, 'view'])->name('po.view');
+});
+Route::prefix('business-setup')->group(function () {
+    Route::get('/company-profile', [BusinessSetupController::class, 'company_profile'])->name('company.profile');
+    Route::get('/system-setting', [BusinessSetupController::class, 'system-setting'])->name('system.setting');
+    Route::get('/smtp-setup', [BusinessSetupController::class, 'smtp_setup'])->name('smtp.setup');
 });

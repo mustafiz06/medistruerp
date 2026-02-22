@@ -77,7 +77,7 @@
 
                     </ul>
                 </li>
-                
+
                 <!-- Purchase Order -->
                 <li class="nav-item has-treeview {{ request()->routeIs('purchase-orders.*') ? 'menu-open' : '' }}">
                     <a href="#"
@@ -240,6 +240,46 @@
                                 <p>{{ __('Suppliers list') }}</p>
                             </a>
                         </li>
+
+                    </ul>
+                </li>
+
+                <!-- Business Setupr -->
+                <li class="nav-item has-treeview {{ request()->routeIs('business-setup.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ request()->routeIs('business-setup.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-file-invoice"></i>
+                        <p>
+                            {{ __('Business Setup') }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('company.profile') }}"
+                                class="nav-link {{ request()->routeIs('company.profile') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Company Profile') }}</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('system.setting') }}"
+                                class="nav-link {{ request()->routeIs('system.setting') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('System Setting') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('smtp.setup') }}"
+                                class="nav-link {{ request()->routeIs('smtp.setup') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('SMTP Setup') }}</p>
+                            </a>
+                        </li>
+
 
                     </ul>
                 </li>
