@@ -1,65 +1,95 @@
 @extends('layout')
 
 @section('content')
+
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ __('Purchase Order List:') }}</h3>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive">
-                            <table class="table table-bordered table-striped data_table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{ __('Date') }}</th>
-                                        <th>{{ __('PO Number') }}</th>
-                                        <th>{{ __('Supplier') }}</th>
-                                        <th>{{ __('Total Amount') }}</th>
-                                        <th>{{ __('Action') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
 
-                                    @foreach ($purchaseOrders as $id=>$po)
-                                    <tr>
-                                        <td>
-                                            {{ $loop->index+1 }}
-                                        </td>
-                                        <td>{{$po->order_date}}</td>
-                                        <td><a href="#">{{$po->po_number}}</a></td>
-                                        <td>{{ $po->supplier->name ?? '-' }}</td>
-                                        <td>{{$po->total_amount}}</td>
-                                        <td>
+```
+    <div class="row">
+        <div class="col-md-12">
 
-                                            <a href=""
-                                                class="btn btn-info btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </a>
+            <div class="card card-primary card-outline">
 
+                <div class="card-header">
+                    <h3 class="card-title">Purchase Order List</h3>
+                </div>
 
-                                            <form id="deleteform" class="d-inline-block" action="{{ route('po.destroy', $po->id ) }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $po->id }}">
-                                                <button type="submit" class="btn btn-danger btn-sm" id="delete" disabled>
-                                                    <i class="fas fa-trash"></i>{{ __('Delete') }}
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                <div class="card-body table-responsive">
 
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
+                    <table class="table table-bordered table-striped data_table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>PO Number</th>
+                                <th>Supplier</th>
+                                <th>Total Amount</th>
+                                <th width="150">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($purchaseOrders as $po)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+
+                                <td>
+                                    {{ \Carbon\Carbon::parse($po->order_date)->format('d M Y') }}
+                                </td>
+
+                                <td>
+                                    <strong>{{ $po->po_number }}</strong>
+                                </td>
+
+                                <td>
+                                    {{ $po->supplier->name ?? '-' }}
+                                </td>
+
+                                <td>
+                                    ৳ {{ number_format($po->total_amount, 2) }}
+                                </td>
+
+                                <td>
+
+                                    {{-- Edit --}}
+                                    <a href="#"
+                                        class="btn btn-info btn-sm">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+
+                                    {{-- Delete --}}
+                                    <form class="d-inline-block"
+                                        action="{{ route('po.destroy', $po->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure to delete this PO?')">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                            class="btn btn-danger btn-sm" disabled>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                    </form>
+
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+
                 </div>
             </div>
+
         </div>
-        <!-- /.row -->
+    </div>
+
+</div>
+```
 
 </section>
+
 @endsection
