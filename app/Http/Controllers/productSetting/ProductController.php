@@ -89,4 +89,32 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return view('productSetting/productEdit', compact('product', 'categories', 'brands', 'units', 'countries'));
     }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'           => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'category_id'    => 'nullable|exists:categories,id',
+            'brand_id'       => 'nullable|exists:brands,id',
+            'unit_id'        => 'nullable|exists:units,id',
+            'origin_id'      => 'nullable|exists:countries,id',
+            'purchase_price' => 'nullable|numeric|min:0',
+            'sales_price'    => 'nullable|numeric|min:0',
+            'alert_quantity' => 'nullable|integer|min:0',
+        ]);
+
+        $product->update($validated);
+
+        return redirect()->route('product.index')
+            ->with('notification', [
+                'messege' => 'Product Updated Successfully!',
+                'alert'   => 'success'
+            ]);
+    }
+
+
+
 }
