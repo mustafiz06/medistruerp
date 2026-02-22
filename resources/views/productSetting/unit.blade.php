@@ -119,7 +119,7 @@
                                             <form id="deleteform" class="d-inline-block" action="{{ route('unit.delete', $unit->id ) }}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $unit->id }}">
-                                                <button type="submit" class="btn btn-danger btn-sm" id="delete">
+                                                <button type="submit" class="btn btn-danger btn-sm" id="delete" disabled>
                                                     <i class="fas fa-trash"></i>{{ __('Delete') }}
                                                 </button>
                                             </form>
