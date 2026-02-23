@@ -120,6 +120,8 @@ Route::prefix('purchase-orders')->group(function () {
     Route::post('/destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('po.destroy');
     Route::get('/view/{id}', [PurchaseOrderController::class, 'view'])->name('po.view');
 });
+
+
 Route::prefix('business-setup')->group(function () {
     Route::get('/company-profile', [BusinessSetupController::class, 'company_profile'])->name('company.profile');
     Route::get('/system-setting', [BusinessSetupController::class, 'system-setting'])->name('system.setting');

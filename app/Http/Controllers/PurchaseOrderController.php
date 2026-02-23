@@ -26,7 +26,7 @@ class PurchaseOrderController extends Controller
         return response()->json(['price' => $product->purchase_price]);
     }
 
-//-----------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
 
     public function store(Request $request)
     {
@@ -85,12 +85,12 @@ class PurchaseOrderController extends Controller
 
     public function poList()
     {
-        $purchaseOrders = PurchaseOrder::all();
+        $purchaseOrders = PurchaseOrder::with('supplier')->latest()->get();
         return view('purchase.purchaseOrderList', compact('purchaseOrders'));
     }
 
     //delte
-    public function destroy ($id)
+    public function destroy($id)
     {
 
         $purchaseOrder = PurchaseOrder::findOrFail($id);
@@ -99,10 +99,10 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->delete();
 
         $notification = array(
-                'messege' => 'Purchase Order Delete successfully!',
-                'alert' => 'success'
-            );
-            return redirect()->back()->with('notification', $notification);
+            'messege' => 'Purchase Order Delete successfully!',
+            'alert' => 'success'
+        );
+        return redirect()->back()->with('notification', $notification);
     }
 
 
@@ -112,7 +112,4 @@ class PurchaseOrderController extends Controller
         $po = PurchaseOrder::findOrFail($id);
         return view('purchase.purchaseOrderView', compact('po'));
     }
-    
-
-    
 }
