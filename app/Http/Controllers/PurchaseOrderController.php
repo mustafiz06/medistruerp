@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
+use App\Models\PurchaseReturn;
 use App\Models\StockMovement;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -111,5 +112,56 @@ class PurchaseOrderController extends Controller
     {
         $po = PurchaseOrder::findOrFail($id);
         return view('purchase.purchaseOrderView', compact('po'));
+    }
+
+
+    //====================Return=================================
+
+    public function returnForm($id)
+    {
+        $po = PurchaseOrder::with('items.product')->findOrFail($id);
+        return view('purchase.return', compact('po'));
+    }
+
+    public function storeReturn(Request $request)
+    {
+        DB::transaction(function () use ($request) {
+            foreach ($request->products as $productId => $productData) {
+                $qty = $productData['quantity'] ?? 0;
+
+                if ($qty > 0) {
+                    $product = Product::findOrFail($productId);
+                    $product->stock -= $qty;
+                    $product->save();
+
+                    PurchaseReturn::create([
+                        'purchase_order_id' => $request->purchase_order_id,
+                        'product_id' => $productId,
+                        'quantity' => $qty,
+                        'unit_price' => $product->purchase_price,
+                        'total' => $qty * $product->purchase_price,
+                        'return_date' => now(),
+                    ]);
+
+                    StockMovement::create([
+                        'product_id' => $productId,
+                        'type' => 'out',
+                        'quantity' => $qty,
+                        'reference' => 'PO-RETURN',
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->back()->with('notification', [
+            'messege' => 'Purchase Return Completed!',
+            'alert' => 'success'
+        ]);
+    }
+
+    public function returnList()
+    {
+        $returns = PurchaseReturn::with(['purchaseOrder.supplier', 'product'])->latest()->get();
+        return view('purchase.returnList', compact('returns'));
     }
 }

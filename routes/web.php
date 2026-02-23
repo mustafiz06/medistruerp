@@ -119,6 +119,10 @@ Route::prefix('purchase-orders')->group(function () {
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
     Route::post('/destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('po.destroy');
     Route::get('/view/{id}', [PurchaseOrderController::class, 'view'])->name('po.view');
+    Route::get('/return/{id}', [PurchaseOrderController::class, 'returnForm'])->name('po.return.form');
+    Route::post('/return/store', [PurchaseOrderController::class, 'storeReturn'])->name('po.return.store');
+Route::get('/returns', [PurchaseOrderController::class, 'returnList'])
+    ->name('po.return.list');
 });
 
 

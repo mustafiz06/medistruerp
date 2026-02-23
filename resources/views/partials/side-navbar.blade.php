@@ -79,9 +79,9 @@
                 </li>
 
                 <!-- Purchase Order -->
-                <li class="nav-item has-treeview {{ request()->routeIs('purchase-orders.*') ? 'menu-open' : '' }}">
+                <li class="nav-item has-treeview {{ request()->is('purchase-orders/*') ? 'menu-open' : '' }}">
                     <a href="#"
-                        class="nav-link {{ request()->routeIs('purchase-orders.*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('purchase-orders/*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-file-invoice"></i>
                         <p>
                             {{ __('Purchase Order') }}
@@ -93,7 +93,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('po.create') }}"
-                                class="nav-link {{ request()->routeIs('po.create') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('po.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Add Purchase Order') }}</p>
                             </a>
@@ -104,6 +104,13 @@
                                 class="nav-link {{ request()->routeIs('po.list') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Purchase Order') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('po.return.list') }}"
+                                class="nav-link {{ request()->routeIs('po.return.list') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Return Purchase Order') }}</p>
                             </a>
                         </li>
 
