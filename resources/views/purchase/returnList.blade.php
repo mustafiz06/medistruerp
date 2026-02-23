@@ -71,14 +71,13 @@
                         {{-- Optional Delete --}}
                         <form action="#"
                               method="POST"
-                              class="d-inline-block"
-                              onsubmit="return confirm('Delete this return?')">
+                              class="d-inline-block">
 
                             @csrf
                             @method('DELETE')
 
                             <button type="submit"
-                                    class="btn btn-danger btn-sm">
+                                    class="btn btn-danger btn-sm" disabled>
                                 <i class="fas fa-trash"></i>
                             </button>
 
