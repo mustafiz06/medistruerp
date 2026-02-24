@@ -93,7 +93,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('po.create') }}"
-                                class="nav-link {{ request()->routeIs('po.*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('po.create') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Add Purchase Order') }}</p>
                             </a>
