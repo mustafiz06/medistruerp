@@ -14,6 +14,7 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierPaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -15,10 +15,16 @@ return new class extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+
             $table->string('name');
-            $table->string('address')->nullable();
+            $table->text('address')->nullable();
             $table->string('responsible_person')->nullable();
             $table->string('responsible_person_contact')->nullable();
+            $table->decimal('previous_due', 12, 2)->default(0);
+            $table->decimal('due_amount', 12, 2)->default(0);
+            $table->decimal('credit_limit', 12, 2)->default(0);
+            $table->text('notes')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

@@ -22,5 +22,4 @@ public function returns()
 {
     return $this->hasMany(PurchaseReturn::class);
 }
-    
 }
