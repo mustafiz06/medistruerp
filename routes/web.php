@@ -129,6 +129,7 @@ Route::prefix('purchase-orders')->group(function () {
 
 Route::prefix('business-setup')->group(function () {
     Route::get('/company-profile', [BusinessSetupController::class, 'company_profile'])->name('company.profile');
+    Route::post('/company-profile-update', [BusinessSetupController::class, 'company_update'])->name('company.update');
     Route::get('/system-setting', [BusinessSetupController::class, 'system-setting'])->name('system.setting');
     Route::get('/smtp-setup', [BusinessSetupController::class, 'smtp_setup'])->name('smtp.setup');
 });
