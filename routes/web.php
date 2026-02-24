@@ -110,12 +110,14 @@ Route::prefix('stock')->group(function () {
     Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
     Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
 });
+// get product price for ajax================             common
+Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
 
 
+// purchase route
 Route::prefix('purchase-orders')->group(function () {
     Route::get('/', [PurchaseOrderController::class, 'poList'])->name('po.list');
     Route::get('/add', [PurchaseOrderController::class, 'create'])->name('po.create');
-    Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('po.store');
     Route::post('/destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('po.destroy');
     Route::get('/view/{id}', [PurchaseOrderController::class, 'view'])->name('po.view');
