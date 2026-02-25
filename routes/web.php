@@ -103,6 +103,7 @@ Route::prefix('supplier')->group(function () {
     Route::post('/status/{id}/', [SupplierController::class, 'status'])->name('supplier.status');
     Route::get('/edit/{id}', [SupplierController::class, 'edit_view'])->name('supplier.edit.view');
     Route::post('/edit/{id}/', [SupplierController::class, 'update'])->name('supplier.update');
+    Route::get('/due-list', [SupplierController::class, 'dueList'])->name('supplier.due.list');
 });
 
 //stock route

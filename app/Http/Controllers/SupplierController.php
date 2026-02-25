@@ -81,4 +81,29 @@ class SupplierController extends Controller
             ->route('supplier.index')
             ->with('notification', $notification);
     }
+
+    //account
+    public function dueList(Request $request)
+{
+    $query = Supplier::query()
+        ->where('due_amount', '>', 0);
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('responsible_person', 'like', "%{$search}%")
+              ->orWhere('responsible_person_contact', 'like', "%{$search}%");
+        });
+    }
+
+    $suppliers = $query->orderByDesc('due_amount')
+        ->paginate(20)
+        ->withQueryString();
+
+    $totalDue = (clone $query)->sum('due_amount');
+
+    return view('supplier.dueList', compact('suppliers', 'totalDue'));
+}
 }
