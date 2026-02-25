@@ -71,6 +71,11 @@ class PurchaseOrderController extends Controller
                     'notes' => 'Stock added via PO',
                 ]);
             }
+            $totalAmount = collect($request->products)->sum(function ($product) {
+                return $product['quantity'] * $product['unit_price'];
+            });
+            Supplier::where('id', $request->supplier_id)
+                ->increment('due_amount', $totalAmount);
         });
         $notification = array(
             'messege' => 'Purchase Order successfully!',
