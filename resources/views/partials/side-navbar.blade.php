@@ -247,6 +247,20 @@
                                 <p>{{ __('Suppliers list') }}</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('supplier.due.list') }}"
+                                class="nav-link {{ request()->routeIs('supplier.due.list') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Supplier Due list') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('supplier.payment.form') }}"
+                                class="nav-link {{ request()->routeIs('supplier.payment.form') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Suppliers Payment') }}</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
