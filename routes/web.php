@@ -15,6 +15,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
+use App\Http\Controllers\SupplierPaymentController as ControllersSupplierPaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -104,6 +105,10 @@ Route::prefix('supplier')->group(function () {
     Route::get('/edit/{id}', [SupplierController::class, 'edit_view'])->name('supplier.edit.view');
     Route::post('/edit/{id}/', [SupplierController::class, 'update'])->name('supplier.update');
     Route::get('/due-list', [SupplierController::class, 'dueList'])->name('supplier.due.list');
+
+    Route::get('/payment', [SupplierPaymentController::class, 'supplierWisePaymentForm'])->name('supplier.payment.form');
+    Route::get('/payment-pos/{id}', [SupplierPaymentController::class, 'getSupplierPOs']);
+    Route::post('/payment', [SupplierPaymentController::class, 'storeSupplierPayments'])->name('supplier.payment.store');
 });
 
 //stock route
