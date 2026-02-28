@@ -214,6 +214,13 @@
                                 <p>{{ __('Customers list') }}</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customer.due.list') }}"
+                                class="nav-link {{ request()->routeIs('customer.due.list') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('Customers Due List') }}</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>

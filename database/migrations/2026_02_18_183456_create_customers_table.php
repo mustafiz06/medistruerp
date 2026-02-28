@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->string('address')->nullable();
             $table->string('contact')->nullable();
+            $table->string('due_amount')->nullable();
             $table->string('responsible_person')->nullable();
             $table->string('responsible_person_contact')->nullable();
             $table->timestamps();

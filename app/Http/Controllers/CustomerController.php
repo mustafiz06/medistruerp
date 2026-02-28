@@ -85,4 +85,29 @@ class CustomerController extends Controller
             ->route('customer.index')
             ->with('notification', $notification);
     }
+
+    //account
+    public function dueList(Request $request)
+    {
+        $query = Customer::query()
+            ->where('due_amount', '>', 0);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('responsible_person', 'like', "%{$search}%")
+                    ->orWhere('responsible_person_contact', 'like', "%{$search}%");
+            });
+        }
+
+        $customers = $query->orderByDesc('due_amount')
+            ->paginate(20)
+            ->withQueryString();
+
+        $totalDue = (clone $query)->sum('due_amount');
+
+        return view('customer.dueList', compact('customers', 'totalDue'));
+    }
 }

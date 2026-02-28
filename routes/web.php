@@ -93,6 +93,7 @@ Route::prefix('customer')->group(function () {
     Route::post('/status/{id}/', [CustomerController::class, 'status'])->name('customer.status');
     Route::get('/edit/{id}', [CustomerController::class, 'edit_view'])->name('customer.edit.view');
     Route::post('/edit/{id}/', [CustomerController::class, 'update'])->name('customer.update');
+    Route::get('/due-list', [CustomerController::class, 'dueList'])->name('customer.due.list');
 });
 
 //supplier route
