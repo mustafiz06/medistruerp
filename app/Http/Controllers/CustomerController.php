@@ -16,28 +16,85 @@ class CustomerController extends Controller
     {
         return view('customer/customerAdd');
     }
+
+
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:191',
+        $rules = [
+            'customer_type' => 'required|in:individual,organization',
+            'email'         => 'nullable|email|max:150',
+            'phone'         => 'nullable|string|max:20',
+            'credit_limit'  => 'nullable|numeric|min:0',
+        ];
+
+        if ($request->customer_type === 'individual') {
+            $rules['name'] = 'required|string|max:150';
+        }
+
+        if ($request->customer_type === 'organization') {
+            $rules['company_name'] = 'required|string|max:150';
+        }
+
+        $validated = $request->validate($rules);
+
+        $customerCode = $this->generateCustomerCode($request->customer_type);
+
+        $customer = Customer::create([
+            'customer_code'            => $customerCode,
+            'customer_type'            => $request->customer_type,
+
+            // Individual
+            'name'                     => $request->name,
+            'designation'              => $request->designation,
+            'work_place'               => $request->work_place,
+            'gender'                   => $request->gender,
+
+            // Organization
+            'company_name'             => $request->company_name,
+            'contact_person'           => $request->contact_person,
+            'contact_person_position'  => $request->contact_person_position,
+            'contact_person_phone'     => $request->contact_person_phone,
+            'bin_no'                   => $request->bin_no,
+
+            // Common
+            'email'                    => $request->email,
+            'phone'                    => $request->phone,
+            'address'                  => $request->address,
+            'credit_limit'             => $request->credit_limit ?? 0,
+            'status'                   => 'active',
+            'priority'                 => 'normal',
         ]);
 
-        Customer::create([
-            'name' => $request->name,
-            'designation' => $request->designation,
-            'address' => $request->address,
-            'contact' => $request->contact,
-            'responsible_person' => $request->responsible_person,
-            'responsible_person_contact' => $request->responsible_person_contact,
-        ]);
-        $notification = array(
-            'messege' => 'customer Added successfully!',
-            'alert' => 'success'
-        );
         return redirect()
             ->route('customer.index')
-            ->with('notification', $notification);
+            ->with('success', 'Customer created successfully.');
     }
+
+    private function generateCustomerCode($type)
+    {
+        $prefix = $type === 'individual' ? 'IND' : 'ORG';
+
+        $lastCustomer = Customer::where('customer_type', $type)
+            ->latest()
+            ->first();
+
+        if ($lastCustomer) {
+            $number = intval(substr($lastCustomer->customer_code, -5)) + 1;
+        } else {
+            $number = 1;
+        }
+
+        return $prefix . '-' . str_pad($number, 5, '0', STR_PAD_LEFT);
+    }
+
+
+
+
+
+
+
+
 
     public function delete($id)
     {
