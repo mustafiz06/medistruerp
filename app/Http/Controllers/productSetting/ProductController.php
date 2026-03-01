@@ -27,7 +27,7 @@ class ProductController extends Controller
         $products = $query->orderBy('id', 'desc')->paginate(15);
         $categories = Category::where('status', 1)->get();
         $brands = Brand::where('status', 1)->get();
-        return view('productSetting/product', compact('products','categories', 'brands'));
+        return view('productSetting/product', compact('products', 'categories', 'brands'));
     }
     public function add()
     {
@@ -92,7 +92,7 @@ class ProductController extends Controller
 
 
     public function edit_view($id)
-    {  
+    {
         $categories = Category::where('status', 1)->get();
         $brands     = Brand::where('status', 1)->get();
         $units      = Unit::where('status', 1)->get();
@@ -116,6 +116,7 @@ class ProductController extends Controller
             'purchase_price' => 'nullable|numeric|min:0',
             'sales_price'    => 'nullable|numeric|min:0',
             'alert_quantity' => 'nullable|integer|min:0',
+            'is_active' => 'boolean',
         ]);
 
         $product->update($validated);
@@ -126,7 +127,5 @@ class ProductController extends Controller
                 'alert'   => 'success'
             ]);
     }
-
-
 
 }
