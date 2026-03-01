@@ -12,10 +12,22 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        return view('productSetting/product', compact('products'));
+        $query = Product::with(['category', 'brand', 'unit', 'origin']);
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        }
+        if ($request->has('category_id') && $request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->has('brand_id') && $request->brand_id) {
+            $query->where('brand_id', $request->brand_id);
+        }
+        $products = $query->orderBy('id', 'desc')->paginate(15);
+        $categories = Category::where('status', 1)->get();
+        $brands = Brand::where('status', 1)->get();
+        return view('productSetting/product', compact('products','categories', 'brands'));
     }
     public function add()
     {
