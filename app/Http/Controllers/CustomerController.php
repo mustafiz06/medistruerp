@@ -63,7 +63,8 @@ class CustomerController extends Controller
             'address'                  => $request->address,
             'credit_limit'             => $request->credit_limit ?? 0,
             'status'                   => 'active',
-            'priority'                 => 'normal',
+            'priority'                 => $request->priority,
+            'notes'                 => $request->notes,
         ]);
 
         return redirect()
@@ -119,29 +120,30 @@ class CustomerController extends Controller
         return view('customer/customerEdit', compact('customer'));
     }
 
-    public function update(Request $request, $id)
+   public function edit(Customer $customer)
     {
-        $customer = Customer::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'designation' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'contact' => 'nullable|string|max:50',
-            'responsible_person' => 'nullable|string|max:255',
-            'responsible_person_contact' => 'nullable|string|max:50',
-        ]);
-
-        $customer->update($request->all());
-
-        $notification = array(
-            'messege' => 'customer updated successfully!',
-            'alert' => 'success'
-        );
-        return redirect()
-            ->route('customer.index')
-            ->with('notification', $notification);
+        return view('customer.edit', compact('customer'));
     }
+
+    public function update(Request $request, $id)
+{
+    $customer = Customer::findOrFail($id);
+    
+    $request->validate([
+        'customer_type' => 'required',
+        'name' => 'required_if:customer_type,individual',
+        'company_name' => 'required_if:customer_type,organization',
+        'contact_person' => 'required_if:customer_type,organization',
+        'phone' => 'required',
+        'status' => 'required',
+    ]);
+    
+    $customer->update($request->all());
+    
+    return redirect()->route('customer.index')
+        ->with('success', 'Customer updated successfully!');
+}
+
 
     //account
     public function dueList(Request $request)
