@@ -45,4 +45,14 @@ class Product extends Model
 
         });
     }
+
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+    
+    public function getTotalStockAttribute(): float
+    {
+        return $this->inventories()->sum('current_stock');
+    }
 }
