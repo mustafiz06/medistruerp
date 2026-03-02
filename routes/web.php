@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\accountSetting\ExpenseHeadController;
 use App\Http\Controllers\accountSetting\PaymentMethodController;
+use App\Http\Controllers\AllApiController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BusinessSetupController;
 use App\Http\Controllers\CustomerController;
@@ -32,6 +33,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// AJAX API ROUTES 
+Route::prefix('api')->name('api.')->group(function () {
+    Route::get('/products/{id}', [AllApiController::class, 'getProduct'])->name('products.info');
+});
 
 //product setting route
 Route::prefix('productsetting')->group(function () {
@@ -118,8 +124,7 @@ Route::prefix('stock')->group(function () {
     Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
     Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
 });
-// get product price for ajax================             common
-Route::get('/products/price/{id}', [PurchaseOrderController::class, 'getProductPrice'])->name('products.price');
+
 
 
 // purchase route

@@ -21,11 +21,7 @@ class PurchaseOrderController extends Controller
         $poNumber = 'PO-' . str_pad($lastPo ? $lastPo->id + 1 : 1, 5, '0', STR_PAD_LEFT);
         return view('purchase.purchase', compact('products', 'suppliers', 'poNumber'));
     }
-    public function getProductPrice($id)
-    {
-        $product = Product::find($id);
-        return response()->json(['price' => $product->purchase_price]);
-    }
+    
 
     //-----------------------------------------------------------------------------------------------------------
 
