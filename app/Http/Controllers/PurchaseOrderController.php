@@ -62,7 +62,7 @@ class PurchaseOrderController extends Controller
             }
 
             Supplier::where('id', $request->supplier_id)
-                ->increment('due_amount', $totalAmount);
+                ->increment('due_amount', $due_amount);
         });
 
         return redirect()
@@ -80,6 +80,56 @@ class PurchaseOrderController extends Controller
     {
         $purchaseOrders = PurchaseOrder::with('supplier')->latest()->get();
         return view('purchase.purchaseOrderList', compact('purchaseOrders'));
+    }
+
+    public function updateStatus($id, Request $request)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:pending,completed,cancel',
+            ]);
+
+            $po = PurchaseOrder::findOrFail($id);
+            $oldStatus = $po->status;
+            $newStatus = $request->status;
+
+            // Prevent invalid transitions
+            if ($oldStatus === 'completed' && $newStatus !== 'completed') {
+                return back()->with('notification', [
+                    'message' => 'Cannot change status of a completed PO',
+                    'alert' => 'warning'
+                ]);
+            }
+
+            // Handle cancel: restore supplier due
+            if ($newStatus === 'cancel' && $oldStatus !== 'cancel') {
+                if ($po->due_amount > 0) {
+                    Supplier::where('id', $po->supplier_id)
+                        ->decrement('due_amount', $po->total_amount);
+                }
+            }
+
+            // Handle uncancel: re-add due
+            if ($oldStatus === 'cancel' && $newStatus !== 'cancel') {
+                Supplier::where('id', $po->supplier_id)
+                    ->increment('due_amount', $po->due_amount);
+            }
+
+            $po->update([
+                'status' => $newStatus,
+                'status_changed_at' => now(),
+            ]);
+
+            return back()->with('notification', [
+                'message' => "Status updated to " . ucfirst($newStatus),
+                'alert' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('notification', [
+                'message' => 'Error updating status: ' . $e->getMessage(),
+                'alert' => 'danger'
+            ]);
+        }
     }
 
     //delte

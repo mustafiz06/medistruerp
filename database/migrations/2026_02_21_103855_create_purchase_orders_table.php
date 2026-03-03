@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('total_amount', 12, 2);
             $table->decimal('paid_amount', 12, 2)->default(0.00);
             $table->decimal('due_amount', 12, 2)->default(0.00);
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'cancel'])->default('pending');
             $table->text('status_notes')->nullable();
             $table->timestamp('status_changed_at')->nullable();
             $table->timestamps();

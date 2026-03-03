@@ -90,9 +90,9 @@
                             <select class="form-control form-control-sm" id="supplier-filter">
                                 <option value="">All Suppliers</option>
                                 @foreach($purchaseOrders->unique('supplier_id') as $po)
-                                    @if($po->supplier)
-                                        <option value="{{ $po->supplier_id }}">{{ $po->supplier->name }}</option>
-                                    @endif
+                                @if($po->supplier)
+                                <option value="{{ $po->supplier_id }}">{{ $po->supplier->name }}</option>
+                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -141,19 +141,19 @@
                                 <td>{{ \Carbon\Carbon::parse($po->order_date)->format('d M Y') }}</td>
                                 <td>
                                     @if($po->supplier)
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm rounded-circle bg-info text-white d-flex align-items-center justify-content-center mr-2" style="width: 32px; height: 32px;">
-                                                <small>{{ substr($po->supplier->name, 0, 1) }}</small>
-                                            </div>
-                                            <div>
-                                                <div class="font-weight-medium">{{ $po->supplier->name }}</div>
-                                                @if($po->supplier->phone)
-                                                    <small class="text-muted">{{ $po->supplier->phone }}</small>
-                                                @endif
-                                            </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm rounded-circle bg-info text-white d-flex align-items-center justify-content-center mr-2" style="width: 32px; height: 32px;">
+                                            <small>{{ substr($po->supplier->name, 0, 1) }}</small>
                                         </div>
+                                        <div>
+                                            <div class="font-weight-medium">{{ $po->supplier->name }}</div>
+                                            @if($po->supplier->phone)
+                                            <small class="text-muted">{{ $po->supplier->phone }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
                                     @else
-                                        <span class="text-muted">N/A</span>
+                                    <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
                                 <td class="text-right font-weight-bold">
@@ -166,72 +166,52 @@
                                     ${{ number_format($po->due_amount ?? $po->total_amount, 2) }}
                                 </td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm dropdown-toggle 
-                                            {{ $po->status == 'completed' ? 'btn-success' : 
-                                               ($po->status == 'cancel' ? 'btn-danger' : 'btn-warning') }}"
-                                            type="button" 
-                                            id="statusDropdown{{ $po->id }}" 
-                                            data-toggle="dropdown" 
-                                            aria-haspopup="true" 
-                                            aria-expanded="false"
-                                            style="min-width: 100px;">
-                                            @if($po->status == 'completed')
-                                                <i class="fas fa-check-circle"></i> Completed
-                                            @elseif($po->status == 'cancel')
-                                                <i class="fas fa-times-circle"></i> Cancelled
-                                            @else
+                                    <form method="POST" action="{{ route('po.status.update', $po->id) }}" class="d-inline">
+                                        @csrf
+                                        @method('POST')
+                                        <select name="status"
+                                            class="form-control form-control-sm {{ $po->status == 'completed' ? 'btn-success' : ($po->status == 'cancel' ? 'btn-danger' : 'btn-warning') }}"
+                                            onchange="this.form.submit()"
+                                            style="min-width: 120px; cursor: pointer;">
+                                            <option value="pending" {{ $po->status == 'pending' ? 'selected' : '' }}>
                                                 <i class="fas fa-clock"></i> Pending
-                                            @endif
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="statusDropdown{{ $po->id }}">
-                                            <a class="dropdown-item {{ $po->status == 'pending' ? 'active' : '' }}" 
-                                               href="#" 
-                                               onclick="changeStatus({{ $po->id }}, 'pending')">
-                                                <i class="fas fa-clock text-warning"></i> Pending
-                                            </a>
-                                            <a class="dropdown-item {{ $po->status == 'completed' ? 'active' : '' }}" 
-                                               href="#" 
-                                               onclick="changeStatus({{ $po->id }}, 'completed')">
-                                                <i class="fas fa-check-circle text-success"></i> Completed
-                                            </a>
-                                            <a class="dropdown-item {{ $po->status == 'cancel' ? 'active' : '' }}" 
-                                               href="#" 
-                                               onclick="changeStatus({{ $po->id }}, 'cancel')">
-                                                <i class="fas fa-times-circle text-danger"></i> Cancelled
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <small class="dropdown-item-text text-muted">Click to change status</small>
-                                        </div>
-                                    </div>
+                                            </option>
+                                            <option value="completed" {{ $po->status == 'completed' ? 'selected' : '' }}>
+                                                <i class="fas fa-check-circle"></i> Completed
+                                            </option>
+                                            <option value="cancel" {{ $po->status == 'cancel' ? 'selected' : '' }}>
+                                                <i class="fas fa-times-circle"></i> Cancelled
+                                            </option>
+                                        </select>
+                                    </form>
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('po.view', $po->id) }}" 
-                                           class="btn btn-info btn-sm" 
-                                           title="View Details"
-                                           data-toggle="tooltip">
+                                        <a href="{{ route('po.view', $po->id) }}"
+                                            class="btn btn-info btn-sm"
+                                            title="View Details"
+                                            data-toggle="tooltip">
                                             <i class="fas fa-eye"></i> View
                                         </a>
                                         @if(!in_array($po->status, ['completed', 'cancel']))
-                                        <a href="{{ route('po.edit', $po->id) }}" 
-                                           class="btn btn-primary btn-sm" 
-                                           title="Edit"
-                                           data-toggle="tooltip">
+                                        <a href="{{ route('po.edit', $po->id) }}"
+                                            class="btn btn-primary btn-sm"
+                                            title="Edit"
+                                            data-toggle="tooltip">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                         @endif
-                                        <a href="{{ route('po.return.form', $po->id) }}" 
-                                           class="btn btn-warning btn-sm" 
-                                           title="Return Items"
-                                           data-toggle="tooltip">
+                                        <a href="{{ route('po.return.form', $po->id) }}"
+                                            class="btn btn-warning btn-sm"
+                                            title="Return Items"
+                                            data-toggle="tooltip">
                                             <i class="fas fa-undo"></i> Return
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-danger btn-sm" 
-                                                title="Delete"
-                                                data-toggle="tooltip"
-                                                onclick="confirmDelete({{ $po->id }}, '{{ $po->po_number }}')">
+                                        <button type="button"
+                                            class="btn btn-danger btn-sm"
+                                            title="Delete"
+                                            data-toggle="tooltip"
+                                            onclick="confirmDelete({{ $po->id }}, '{{ $po->po_number }}')">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </div>
@@ -263,114 +243,85 @@
 
                 {{-- Pagination --}}
                 @if(method_exists($purchaseOrders, 'links'))
-                    <div class="mt-3">
-                        {{ $purchaseOrders->links() }}
-                    </div>
+                <div class="mt-3">
+                    {{ $purchaseOrders->links() }}
+                </div>
                 @endif
             </div>
         </div>
     </div>
 </section>
 
-{{-- Status Change Modal --}}
-<div class="modal fade" id="statusChangeModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <form id="statusChangeForm" method="POST">
-                @csrf
-                @method('PATCH')
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fas fa-sync-alt"></i> Change Status</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="po_id" id="modal-po-id">
-                    <div class="form-group">
-                        <label>New Status</label>
-                        <select name="status" class="form-control" required>
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancel">Cancelled</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Notes (Optional)</label>
-                        <textarea name="status_notes" class="form-control" rows="2" placeholder="Reason for status change..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Status</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 @endsection
 
 @section('styles')
 <style>
     .info-box {
-        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
         border-radius: 0.25rem;
     }
+
     .table th {
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.85rem;
         letter-spacing: 0.5px;
     }
+
     .btn-group .btn {
         margin: 0 1px;
         border-radius: 0.2rem;
     }
+
     .btn-group .btn:first-child {
         border-top-left-radius: 0.2rem;
         border-bottom-left-radius: 0.2rem;
     }
+
     .btn-group .btn:last-child {
         border-top-right-radius: 0.2rem;
         border-bottom-right-radius: 0.2rem;
     }
+
     .avatar-sm {
         font-size: 0.75rem;
         font-weight: 600;
     }
-    .dropdown-menu {
-        min-width: 180px;
+
+    .alert {
+        border-radius: 0.25rem;
     }
-    .dropdown-item i {
-        width: 20px;
+
+    select.form-control.btn-success {
+        background-color: #28a745;
+        color: white;
+        border-color: #28a745;
     }
-    .dropdown-item.active {
-        background-color: #e9ecef;
-        color: #495057;
+
+    select.form-control.btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border-color: #dc3545;
+    }
+
+    select.form-control.btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+        border-color: #ffc107;
+    }
+
+    select.form-control:hover {
+        opacity: 0.9;
     }
 </style>
 @endsection
 
 @section('script')
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    // Initialize tooltips
-    $(function () {
+    $(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    // Status Change Function
-    function changeStatus(poId, newStatus) {
-        $('#modal-po-id').val(poId);
-        $('#statusChangeForm select[name="status"]').val(newStatus);
-        $('#statusChangeForm').attr('action', '/purchase-orders/status/' + poId);
-        $('#statusChangeModal').modal('show');
-    }
-
-    // Delete Confirmation with SweetAlert
     function confirmDelete(poId, poNumber) {
         Swal.fire({
             title: 'Are you sure?',
@@ -386,27 +337,26 @@
             if (result.isConfirmed) {
                 let form = document.createElement('form');
                 form.method = 'POST';
-                form.action = "{{ url('purchase-orders/destroy') }}/" + poId;
-                form.innerHTML = `@csrf @method('POST')`;
+                form.action = "{{ url('purchase-orders') }}/" + poId;
+                form.innerHTML = `@csrf @method('DELETE')`;
                 document.body.appendChild(form);
                 form.submit();
             }
         });
     }
 
-    // Filter Functions
     function applyFilters() {
         let status = $('#status-filter').val();
         let supplier = $('#supplier-filter').val();
-        
+
         $('#po-table tbody tr').each(function() {
             let rowStatus = $(this).data('status');
             let rowSupplier = $(this).data('supplier');
             let showRow = true;
-            
+
             if (status && rowStatus !== status) showRow = false;
             if (supplier && rowSupplier != supplier) showRow = false;
-            
+
             $(this).toggle(showRow);
         });
     }
@@ -415,40 +365,17 @@
         if (!$(this).val()) applyFilters();
     });
 
-    // Status change form submit
-    $('#statusChangeForm').submit(function(e) {
-        e.preventDefault();
-        let form = $(this);
-        let submitBtn = form.find('button[type="submit"]');
-        
-        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
-        
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: form.serialize(),
-            success: function(response) {
-                $('#statusChangeModal').modal('hide');
-                location.reload();
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error updating status. Please try again.'
-                });
-                submitBtn.prop('disabled', false).html('Update Status');
-            }
-        });
-    });
-
-    // DataTable initialization
     $(document).ready(function() {
         if ($.fn.DataTable) {
             $('#po-table').DataTable({
                 "pageLength": 10,
-                "order": [[ 1, "desc" ]],
-                "columnDefs": [{ "orderable": false, "targets": [8] }],
+                "order": [
+                    [1, "desc"]
+                ],
+                "columnDefs": [{
+                    "orderable": false,
+                    "targets": [8]
+                }],
                 "language": {
                     "search": "Filter:",
                     "paginate": {
