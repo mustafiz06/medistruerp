@@ -21,7 +21,7 @@ class PurchaseOrderController extends Controller
         $poNumber = 'PO-' . str_pad($lastPo ? $lastPo->id + 1 : 1, 5, '0', STR_PAD_LEFT);
         return view('purchase.purchase', compact('products', 'suppliers', 'poNumber'));
     }
-    
+
 
     //-----------------------------------------------------------------------------------------------------------
 
@@ -31,55 +31,43 @@ class PurchaseOrderController extends Controller
             'po_number' => 'required|unique:purchase_orders,po_number',
             'supplier_id' => 'required|exists:suppliers,id',
             'order_date' => 'required|date',
+            'products' => 'required|array|min:1',
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.unit_price' => 'required|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request) {
+            $totalAmount = collect($request->products)->sum(function ($p) {
+                return $p['quantity'] * $p['unit_price'];
+            });
             $po = PurchaseOrder::create([
                 'po_number' => $request->po_number,
                 'supplier_id' => $request->supplier_id,
                 'order_date' => $request->order_date,
-                'total_amount' => collect($request->products)->sum(function ($p) {
-                    return $p['quantity'] * $p['unit_price'];
-                }),
-                'status' => 'completed',
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
             ]);
 
             foreach ($request->products as $p) {
-                $item = PurchaseOrderItem::create([
+                PurchaseOrderItem::create([
                     'purchase_order_id' => $po->id,
                     'product_id' => $p['id'],
                     'quantity' => $p['quantity'],
                     'unit_price' => $p['unit_price'],
                 ]);
-
-                $product = Product::find($p['id']);
-                $product->stock += $p['quantity'];
-                $product->save();
-
-                StockMovement::create([
-                    'product_id' => $p['id'],
-                    'type' => 'in',
-                    'quantity' => $p['quantity'],
-                    'reference' => $po->po_number,
-                    'notes' => 'Stock added via PO',
-                ]);
             }
-            $totalAmount = collect($request->products)->sum(function ($product) {
-                return $product['quantity'] * $product['unit_price'];
-            });
+
             Supplier::where('id', $request->supplier_id)
                 ->increment('due_amount', $totalAmount);
         });
-        $notification = array(
-            'messege' => 'Purchase Order successfully!',
-            'alert' => 'success'
-        );
+
         return redirect()
             ->route('po.list')
-            ->with('notification', $notification);
+            ->with('notification', [
+                'message' => 'Purchase Order created successfully!',
+                'alert' => 'success'
+            ]);
     }
 
 
