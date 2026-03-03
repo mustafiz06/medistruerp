@@ -137,6 +137,13 @@ Route::prefix('purchase-orders')->group(function () {
     Route::get('/return/{id}', [PurchaseOrderController::class, 'returnForm'])->name('po.return.form');
     Route::post('/return/store', [PurchaseOrderController::class, 'storeReturn'])->name('po.return.store');
     Route::get('/returns', [PurchaseOrderController::class, 'returnList'])->name('po.return.list');
+
+
+
+    Route::post('/status/{id}', [PurchaseOrderController::class, 'updateStatus'])->name('po.status.update');
+    
+    Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('po.edit');
+    Route::post('/update/{id}', [PurchaseOrderController::class, 'update'])->name('po.update');
 });
 
 

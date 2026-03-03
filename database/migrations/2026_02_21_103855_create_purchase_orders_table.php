@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
@@ -19,18 +14,21 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id');
             $table->date('order_date');
             $table->decimal('total_amount', 12, 2);
-            $table->enum('status', ['pending', 'completed'])->default('pending');
+            $table->decimal('paid_amount', 12, 2)->default(0.00);
+            $table->decimal('due_amount', 12, 2)->default(0.00);
+            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->text('status_notes')->nullable();
+            $table->timestamp('status_changed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            
+            // Indexes for performance
+            $table->index('status');
+            $table->index('order_date');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('purchase_orders');

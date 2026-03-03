@@ -41,11 +41,14 @@ class PurchaseOrderController extends Controller
             $totalAmount = collect($request->products)->sum(function ($p) {
                 return $p['quantity'] * $p['unit_price'];
             });
+            $due_amount = $totalAmount - $request->paid_amount;
             $po = PurchaseOrder::create([
                 'po_number' => $request->po_number,
                 'supplier_id' => $request->supplier_id,
                 'order_date' => $request->order_date,
+                'paid_amount' => $request->paid_amount,
                 'total_amount' => $totalAmount,
+                'due_amount' => $due_amount,
                 'status' => 'pending',
             ]);
 

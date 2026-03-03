@@ -50,14 +50,14 @@
                     <hr>
                     <h5>Products</h5>
 
-                    <table class="table table-bordered" id="products-table">
-                        <thead>
+                    <table class="table table-bordered table-sm" id="products-table">
+                        <thead class="thead-light">
                             <tr>
-                                <th width="30%">Product</th>
+                                <th width="35%">Product</th>
                                 <th width="15%">Qty</th>
                                 <th width="20%">Unit Price</th>
                                 <th width="20%">Total</th>
-                                <th width="15%">Action</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,7 +66,7 @@
                                     <select name="products[0][id]" class="form-control product-select" required>
                                         <option value="">Select Product</option>
                                         @foreach($products as $product)
-                                        <option value="{{ $product->id }}" data-price="{{ $product->purchase_price }}">
+                                        <option value="{{ $product->id }}" data-price="{{ $product->purchase_price ?? 0 }}">
                                             {{ $product->name }}
                                         </option>
                                         @endforeach
@@ -92,16 +92,44 @@
 
                     <hr>
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label"><strong>Grand Total</strong></label>
-                        <div class="col-sm-10">
-                            <input type="text" id="grand-total" class="form-control" readonly>
+                    {{-- PAYMENT SECTION --}}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Grand Total</label>
+                                <input type="text" id="grand-total" class="form-control font-weight-bold text-primary" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Paid Amount</label>
+                                <input type="number" step="0.01" name="paid_amount" id="paid-amount" 
+                                       class="form-control" value="0.00" min="0">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Due Amount</label>
+                                <input type="text" id="due-amount" class="form-control font-weight-bold" readonly>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    {{-- Hidden fields for backend --}}
+                    <input type="hidden" name="due_amount" id="due-amount-input" value="0.00">
+                    <input type="hidden" name="total_amount" id="total-amount-input" value="0.00">
+                    {{-- Hidden status field --}}
+                    <input type="hidden" name="status" id="status-input" value="pending">
+
+                    <hr>
+
+                    {{-- Submit Buttons --}}
+                    <div class="form-group row mb-0">
                         <div class="offset-sm-2 col-sm-10">
                             <button type="submit" class="btn btn-primary">Create Purchase Order</button>
+                            <a href="{{ route('po.list') }}" class="btn btn-secondary ml-2">Cancel</a>
                         </div>
                     </div>
                 </form>
@@ -124,14 +152,11 @@
 
     $('#add-product').click(function() {
         let firstRow = $('#products-table tbody tr:first').clone(true);
-        
         firstRow.find('.product-select').val('').prop('selectedIndex', 0);
         firstRow.find('.qty').val(1);
         firstRow.find('.price').val('');
         firstRow.find('.row-total').val('');
-        
         firstRow.html(firstRow.html().replace(/\[0\]/g, `[${rowIndex}]`));
-        
         $('#products-table tbody').append(firstRow);
         rowIndex++;
     });
@@ -158,7 +183,7 @@
             return;
         }
 
-        if (price) {
+        if (price !== undefined && price !== '') {
             row.find('.price').val(parseFloat(price).toFixed(2));
             calculateRowTotal(row);
         } else {
@@ -193,14 +218,95 @@
         $('.row-total').each(function() {
             grandTotal += parseFloat($(this).val()) || 0;
         });
-        $('#grand-total').val(grandTotal.toFixed(2));
+        
+        let totalFormatted = grandTotal.toFixed(2);
+        $('#grand-total').val(totalFormatted);
+        $('#total-amount-input').val(totalFormatted);
+        
+        calculateDueAmount();
+        updateStatus(); 
     }
+
+    function calculateDueAmount() {
+        let grandTotal = parseFloat($('#grand-total').val()) || 0;
+        let paid = parseFloat($('#paid-amount').val()) || 0;
+        
+        if (paid > grandTotal) {
+            paid = grandTotal;
+            $('#paid-amount').val(paid.toFixed(2));
+        }
+        
+        let due = grandTotal - paid;
+        
+        $('#due-amount').val(due.toFixed(2));
+        $('#due-amount-input').val(due.toFixed(2));
+        
+        if (due > 0) {
+            $('#due-amount').removeClass('text-success').addClass('text-danger');
+        } else if (due === 0 && grandTotal > 0) {
+            $('#due-amount').removeClass('text-danger').addClass('text-success');
+        }
+        
+        updateStatus(); 
+    }
+
+    function updateStatus() {
+        let grandTotal = parseFloat($('#grand-total').val()) || 0;
+        let paid = parseFloat($('#paid-amount').val()) || 0;
+        let status = 'pending';
+        
+        if (grandTotal > 0 && paid >= grandTotal) {
+            status = 'completed';
+        } else {
+            status = 'pending';
+        }
+        
+        $('#status-input').val(status); 
+    }
+
+    $('#paid-amount').on('keyup change', function() {
+        let val = $(this).val();
+        val = val.replace(/[^0-9.]/g, '');
+        let num = parseFloat(val) || 0;
+        if (num < 0) num = 0;
+        calculateDueAmount();
+        updateStatus(); 
+    });
+
+    $('#po-form').submit(function(e) {
+        let paid = parseFloat($('#paid-amount').val()) || 0;
+        let total = parseFloat($('#grand-total').val()) || 0;
+        let hasProducts = $('.product-select').filter(function() { return $(this).val(); }).length > 0;
+        
+        if (!hasProducts) {
+            e.preventDefault();
+            alert('Please add at least one product.');
+            return false;
+        }
+        
+        if (paid > total) {
+            e.preventDefault();
+            alert('Paid amount cannot exceed Grand Total!');
+            return false;
+        }
+        
+        $('#total-amount-input').val(total.toFixed(2));
+        $('#due-amount-input').val((total - paid).toFixed(2));
+        updateStatus(); 
+        
+        let paidInput = $('input[name="paid_amount"]');
+        if (!paidInput.val() || paidInput.val() === '') {
+            paidInput.val('0.00');
+        }
+    });
 
     $(document).ready(function() {
         let firstProduct = $('.product-select:first').val();
         if (firstProduct) {
             $('.product-select:first').trigger('change');
         }
+        calculateGrandTotal();
+        updateStatus();
     });
 </script>
 @endsection
