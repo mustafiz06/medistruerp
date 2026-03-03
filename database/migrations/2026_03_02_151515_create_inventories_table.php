@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
 
             // Foreign Keys
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->nullOnDelete();
-            $table->foreignId('product_batch_id')->nullable()->constrained('product_batches')->nullOnDelete();
-            $table->foreignId('product_id')->nullable()->constrained('product')->nullOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
 
             // Opening Stock
             $table->decimal('opening_stock', 19, 4)->default(0);
@@ -55,7 +53,7 @@ return new class extends Migration
             $table->softDeletes();
 
             // Unique Index
-            $table->unique(['warehouse_id', 'product_id', 'product_batch_id']);
+            $table->unique(['product_id']);
         });
     }
 

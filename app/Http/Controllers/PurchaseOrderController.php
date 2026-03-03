@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\PurchaseReturn;
 use App\Models\StockMovement;
+use App\Models\StockTransaction;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -82,55 +84,123 @@ class PurchaseOrderController extends Controller
         return view('purchase.purchaseOrderList', compact('purchaseOrders'));
     }
 
+
+    //==================================================update status strat====================
+
     public function updateStatus($id, Request $request)
     {
-        try {
-            $request->validate([
-                'status' => 'required|in:pending,completed,cancel',
-            ]);
+        $request->validate([
+            'status' => 'required|in:pending,completed,cancel',
+        ]);
 
-            $po = PurchaseOrder::findOrFail($id);
-            $oldStatus = $po->status;
-            $newStatus = $request->status;
+        $po = PurchaseOrder::with('items.product')->findOrFail($id);
+        $oldStatus = $po->status;
+        $newStatus = $request->status;
 
-            // Prevent invalid transitions
-            if ($oldStatus === 'completed' && $newStatus !== 'completed') {
-                return back()->with('notification', [
-                    'message' => 'Cannot change status of a completed PO',
-                    'alert' => 'warning'
-                ]);
-            }
+        // Prevent changes if already in final state
+        if (in_array($oldStatus, ['completed', 'cancel'])) {
+            $notification = array(
+                'messege' => 'Status is at Final Stage. Cannot change it!',
+                'alert' => 'warning'
+            );
+            return redirect()->back()->with('notification', $notification);
+        }
 
-            // Handle cancel: restore supplier due
-            if ($newStatus === 'cancel' && $oldStatus !== 'cancel') {
-                if ($po->due_amount > 0) {
-                    Supplier::where('id', $po->supplier_id)
-                        ->decrement('due_amount', $po->total_amount);
+        if ($newStatus === 'completed') {
+
+            // Check if stock was already added
+            $stockAlreadyAdded = StockMovement::where('reference', $po->po_number)
+                ->where('type', 'in')
+                ->exists();
+
+            if (!$stockAlreadyAdded) {
+
+                foreach ($po->items as $item) {
+                    if ($item->product && $item->quantity > 0 && $item->unit_price > 0) {
+
+                        // 1. Find or create inventory record
+                        $inventory = Inventory::firstOrCreate(
+                            [
+                                'product_id' => $item->product_id,
+                            ],
+                            [
+                                'current_stock' => 0,
+                                'available_stock' => 0,
+                                'current_stock_value' => 0,
+                                'min_stock_level' => $item->product->alert_quantity ?? 0,
+                                'stock_status' => 'in_stock',
+                            ]
+                        );
+
+                        // 2. Calculate new values
+                        $itemValue = $item->quantity * $item->unit_price;
+                        $newStock = $inventory->current_stock + $item->quantity;
+                        $newValue = $inventory->current_stock_value + $itemValue;
+
+                        // 3. Update inventory
+                        $inventory->update([
+                            'current_stock' => $newStock,
+                            'available_stock' => $newStock - $inventory->reserved_stock,
+                            'current_stock_value' => round($newValue, 4),
+                            'last_movement_at' => now(),
+                            'stock_status' => $newStock <= $inventory->min_stock_level ? 'low_stock' : 'in_stock',
+                        ]);
+
+                        // 4. Log to stock_movements
+                        StockMovement::create([
+                            'product_id' => $item->product_id,
+                            'type' => 'in',
+                            'quantity' => $item->quantity,
+                            'reference' => $po->po_number,
+                        ]);
+
+                        // 5. Log to stock_transactions
+                        StockTransaction::create([
+                            'product_id' => $item->product_id,
+                            'type' => 'purchase',
+                            'quantity' => $item->quantity,
+                            'reference' => $po->po_number,
+                        ]);
+                    }
                 }
             }
 
-            // Handle uncancel: re-add due
-            if ($oldStatus === 'cancel' && $newStatus !== 'cancel') {
-                Supplier::where('id', $po->supplier_id)
-                    ->increment('due_amount', $po->due_amount);
+            // Update PO
+            $po->update([
+                'status' => 'completed',
+                'due_amount' => 0,
+                'status_changed_at' => now(),
+            ]);
+        } elseif ($newStatus === 'cancel') {
+
+            if ($po->due_amount > 0) {
+                Supplier::where('id', $po->supplier_id)->decrement('due_amount', $po->due_amount);
             }
 
             $po->update([
-                'status' => $newStatus,
+                'status' => 'cancel',
                 'status_changed_at' => now(),
             ]);
+        } elseif ($newStatus === 'pending') {
 
-            return back()->with('notification', [
-                'message' => "Status updated to " . ucfirst($newStatus),
-                'alert' => 'success'
-            ]);
-        } catch (\Exception $e) {
-            return back()->with('notification', [
-                'message' => 'Error updating status: ' . $e->getMessage(),
-                'alert' => 'danger'
+            $dueAmount = max(0, $po->total_amount - $po->paid_amount);
+            $po->update([
+                'status' => 'pending',
+                'due_amount' => $dueAmount,
+                'status_changed_at' => now(),
             ]);
         }
+
+        $notification = array(
+            'messege' => 'Status updated successfully!',
+            'alert' => 'success'
+        );
+        return redirect()->back()->with('notification', $notification);
     }
+
+
+    //-----------------------------update status end--------------------------------------------
+
 
     //delte
     public function destroy($id)
