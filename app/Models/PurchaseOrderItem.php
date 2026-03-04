@@ -18,4 +18,15 @@ class PurchaseOrderItem extends Model
     {
         return $this->belongsTo(PurchaseOrder::class);
     }
+    public function getReturnedQuantityAttribute()
+    {
+        return $this->purchaseOrder->returns
+            ->where('product_id', $this->product_id)
+            ->sum('quantity');
+    }
+
+    public function getAvailableToReturnAttribute()
+    {
+        return max(0, $this->quantity - $this->returned_quantity);
+    }
 }

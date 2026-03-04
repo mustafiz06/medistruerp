@@ -226,50 +226,141 @@ class PurchaseOrderController extends Controller
         return view('purchase.purchaseOrderView', compact('po'));
     }
 
-
-    //====================Return=================================
-
     public function returnForm($id)
     {
-        $po = PurchaseOrder::with('items.product')->findOrFail($id);
+        $po = PurchaseOrder::with(['items.product', 'returns', 'supplier'])->findOrFail($id);
+
+        if ($po->status !== 'completed') {
+            return redirect()->back()->with('notification', [
+                'messege' => 'Only completed Purchase Orders can have returns.',
+                'alert' => 'warning'
+            ]);
+        }
+
         return view('purchase.return', compact('po'));
     }
+    //-----------------------------po return start------------------------------------
 
     public function storeReturn(Request $request)
     {
-        DB::transaction(function () use ($request) {
-            foreach ($request->products as $productId => $productData) {
-                $qty = $productData['quantity'] ?? 0;
+        $validated = $request->validate([
+            'purchase_order_id' => 'required|exists:purchase_orders,id',
+            'products' => 'required|array',
+            'products.*.quantity' => 'nullable|integer|min:0',
+            'reason' => 'nullable|string|max:500',
+        ]);
 
-                if ($qty > 0) {
-                    $product = Product::findOrFail($productId);
-                    $product->stock -= $qty;
-                    $product->save();
+        $hasValidQuantity = collect($validated['products'])
+            ->filter(fn($p) => ($p['quantity'] ?? 0) > 0)
+            ->isNotEmpty();
 
-                    PurchaseReturn::create([
-                        'purchase_order_id' => $request->purchase_order_id,
+        if (!$hasValidQuantity) {
+            return redirect()->back()
+                ->withInput()
+                ->with('notification', [
+                    'messege' => 'Please enter return quantity for at least one product.',
+                    'alert' => 'warning'
+                ]);
+        }
+
+        try {
+            DB::transaction(function () use ($validated, $request) {
+
+                $po = PurchaseOrder::with(['items', 'returns'])->findOrFail($validated['purchase_order_id']);
+                $totalReturn = 0;
+
+                foreach ($validated['products'] as $productId => $data) {
+                    $qty = (int) ($data['quantity'] ?? 0);
+
+                    if ($qty <= 0) continue;
+
+                    $item = $po->items->firstWhere('product_id', $productId);
+                    if (!$item) {
+                        throw new \Exception("Product ID {$productId} not found in this Purchase Order");
+                    }
+
+                    $alreadyReturned = $po->returns->where('product_id', $productId)->sum('quantity');
+                    $available = $item->quantity - $alreadyReturned;
+
+                    if ($qty > $available) {
+                        throw new \Exception("Only {$available} units can be returned for product {$item->product->name}");
+                    }
+
+                    $inventory = Inventory::where('product_id', $productId)->first();
+                    if ($inventory) {
+                        $itemValue = $qty * $item->unit_price;
+
+                        $inventory->decrement('current_stock', $qty);
+                        $inventory->decrement('available_stock', $qty);
+                        $inventory->decrement('current_stock_value', $itemValue);
+
+                        if ($inventory->current_stock <= $inventory->min_stock_level) {
+                            $inventory->update(['stock_status' => 'low_stock']);
+                        }
+                    }
+                    $lineTotal = $qty * $item->unit_price;
+                    $return = PurchaseReturn::create([
+                        'purchase_order_id' => $po->id,
                         'product_id' => $productId,
                         'quantity' => $qty,
-                        'unit_price' => $product->purchase_price,
-                        'total' => $qty * $product->purchase_price,
+                        'unit_price' => $item->unit_price,
+                        'total' => $lineTotal,
                         'return_date' => now(),
+                        'reason' => $validated['reason'] ?? null,
                     ]);
 
                     StockMovement::create([
                         'product_id' => $productId,
                         'type' => 'out',
                         'quantity' => $qty,
-                        'reference' => 'PO-RETURN',
+                        'reference' => "PR-{$return->id}",
+                        'notes' => "Return against PO #{$po->po_number}",
                     ]);
-                }
-            }
-        });
 
-        return redirect()->back()->with('notification', [
-            'messege' => 'Purchase Return Completed!',
-            'alert' => 'success'
-        ]);
+                    StockTransaction::create([
+                        'product_id' => $productId,
+                        'type' => 'return',
+                        'quantity' => $qty,
+                        'reference' => "PR-{$return->id}",
+                    ]);
+
+                    if ($po->supplier) {
+                        Supplier::where('id', $po->supplier_id)
+                            ->decrement('due_amount', $lineTotal);
+                    }
+
+                    $totalReturn += $lineTotal;
+                }
+
+                $totalOrdered = $po->items->sum('quantity');
+                $totalReturned = $po->returns->sum('quantity');
+
+                if ($totalReturned >= $totalOrdered) {
+                    $po->update(['status' => 'fully_returned']);
+                }
+            });
+
+            return redirect()->back()->with('notification', [
+                'messege' => 'Purchase Return processed successfully!',
+                'alert' => 'success'
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Return Failed: ' . $e->getMessage(), [
+                'po_id' => $request->purchase_order_id,
+                'user' => auth()->id()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('notification', [
+                    'messege' => 'Error: ' . $e->getMessage(),
+                    'alert' => 'error'
+                ]);
+        }
     }
+
+    //-----------------------------po return end------------------------------------
+
 
     public function returnList()
     {

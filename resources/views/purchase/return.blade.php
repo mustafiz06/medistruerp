@@ -1,138 +1,190 @@
 @extends('layout')
 
 @section('content')
-
 <div class="content-header">
     <div class="container-fluid">
-        <h1 class="m-0 text-dark">Purchase Return</h1>
+        <h1 class="m-0 text-dark">
+            <i class="fas fa-undo-alt me-2"></i>Purchase Return
+        </h1>
     </div>
 </div>
 
 <section class="content">
     <div class="container-fluid">
 
+        @if(session('notification'))
+        <div class="alert alert-{{ session('notification.alert') }} alert-dismissible fade show shadow-sm" role="alert">
+            {{ session('notification.messege') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
         <div class="card card-warning card-outline shadow-sm">
-            <div class="card-header bg-success">
-                <h3 class="card-title">Return Against Purchase Order No: <strong>{{ $po->po_number }}</strong></h3>
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">
+                    Return Against PO: <strong>#{{ $po->po_number }}</strong>
+                </h3>
+                <a href="{{ route('po.list') }}" class="btn btn-sm btn-light">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
             </div>
 
             <div class="card-body">
 
-                <div class="row mb-4">
-                    <div class="col-md-4"><strong>Supplier:</strong> {{ $po->supplier->name }}</div>
-                    <div class="col-md-4"><strong>Order Date:</strong> {{ \Carbon\Carbon::parse($po->order_date)->format('d M Y') }}</div>
-                    <div class="col-md-4"><strong>Total Amount:</strong> ৳ {{ number_format($po->total_amount,2) }}</div>
+                <!-- PO Info -->
+                <div class="row mb-4 p-3 bg-light rounded">
+                    <div class="col-md-3"><strong>Supplier:</strong><br>{{ $po->supplier->name ?? 'N/A' }}</div>
+                    <div class="col-md-3"><strong>Order Date:</strong><br>{{ \Carbon\Carbon::parse($po->order_date)->format('d M Y') }}</div>
+                    <div class="col-md-3"><strong>PO Total:</strong><br>৳ {{ number_format($po->total_amount, 2) }}</div>
+                    <div class="col-md-3"><strong>Status:</strong><br>
+                        <span class="badge bg-{{ $po->status == 'completed' ? 'success' : 'warning' }}">{{ ucfirst($po->status) }}</span>
+                    </div>
                 </div>
 
-                <form action="{{ route('po.return.store') }}" method="POST">
+                <!-- Return Form -->
+                <form action="{{ route('po.return.store') }}" method="POST" id="returnForm">
                     @csrf
                     <input type="hidden" name="purchase_order_id" value="{{ $po->id }}">
 
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle text-center">
+                        <table class="table table-bordered table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Purchased Qty</th>
-                                    <th>Returned Qty</th>
-                                    <th>Remaining Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Return Qty</th>
-                                    <th>Return Total</th>
+                                    <th width="30%">Product</th>
+                                    <th width="12%">Purchased</th>
+                                    <th width="12%">Returned</th>
+                                    <th width="12%">Available</th>
+                                    <th width="12%">Unit Price</th>
+                                    <th width="10%">Return Qty</th>
+                                    <th width="12%">Line Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($po->items as $item)
+                                @forelse($po->items as $item)
                                 @php
-                                $returnedQty = $po->returns ? $po->returns->where('product_id', $item->product_id)->sum('quantity') : 0;
-                                $remaining = $item->quantity - $returnedQty;
+                                $alreadyReturned = $item->returned_quantity;
+                                $available = $item->available_to_return;
+                                $unitPrice = $item->unit_price;
+                                $oldQty = old("products.{$item->product_id}.quantity");
                                 @endphp
-                                <tr>
-                                    <td class="text-start">{{ $item->product->name }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ $returnedQty }}</td>
+                                <tr class="{{ $available <= 0 ? 'table-secondary' : '' }}">
                                     <td>
-                                        @if($remaining > 0)
-                                        <span>{{ $remaining }}</span>
-                                        @else
-                                        <span>0</span>
+                                        <strong>{{ $item->product->name ?? 'Product Deleted' }}</strong>
+                                        @if($item->product && $item->product->sku)
+                                        <br><small class="text-muted">SKU: {{ $item->product->sku }}</small>
                                         @endif
                                     </td>
-                                    <td>৳ {{ number_format($item->unit_price,2) }}</td>
+                                    <td class="text-center">{{ $item->quantity }}</td>
+                                    <td class="text-center text-warning">{{ $alreadyReturned }}</td>
+                                    <td class="text-center fw-bold {{ $available <= 0 ? 'text-danger' : 'text-success' }}">{{ $available }}</td>
+                                    <td class="text-end">৳ {{ number_format($unitPrice, 2) }}</td>
                                     <td>
+                                        @if($available > 0)
                                         <input type="number"
                                             name="products[{{ $item->product_id }}][quantity]"
-                                            class="form-control return-qty"
-                                            min="0"
-                                            max="{{ $remaining }}"
-                                            step="1"
-                                            placeholder="0"
-                                            data-price="{{ $item->unit_price }}"
-                                            {{ $remaining <= 0 ? 'disabled' : '' }}>
+                                            class="form-control form-control-sm return-qty text-center @error('products.'.$item->product_id.'.quantity') is-invalid @enderror"
+                                            min="1"
+                                            max="{{ $available }}"
+                                            value="{{ $oldQty ?? '' }}"
+                                            data-price="{{ $unitPrice }}"
+                                            placeholder="0">
+                                        @error('products.'.$item->product_id.'.quantity')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        @else
+                                        <span class="badge bg-secondary">Fully Returned</span>
+                                        <input type="hidden" name="products[{{ $item->product_id }}][quantity]" value="0">
+                                        @endif
                                     </td>
-                                    <td>
-                                        <input type="text" class="form-control row-total text-end" readonly>
-                                    </td>
+                                    <td class="text-end fw-bold"><span class="row-total">৳ 0.00</span></td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">No items found in this Purchase Order.</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
 
-                    {{-- Grand Total & Reason --}}
-                    <div class="row mt-4">
-                        {{-- Left Side: Return Reason --}}
+                    <!-- Footer -->
+                    <div class="row mt-4 pt-3 border-top">
                         <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label class="form-label"><strong>Return Reason</strong></label>
-                                <textarea name="reason" class="form-control" rows="5" placeholder="Enter reason for return..."></textarea>
-                            </div>
+                            <label class="form-label"><strong>Return Reason <span class="text-danger">*</span></strong></label>
+                            <textarea name="reason" class="form-control @error('reason') is-invalid @enderror" rows="3" placeholder="Brief reason for this return..." required>{{ old('reason') }}</textarea>
+                            @error('reason')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        {{-- Right Side: Grand Total & Submit Button --}}
                         <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label class="form-label"><strong>Grand Return Total</strong></label>
-                                <input type="text" id="grand-total" class="form-control form-control-lg text-end fw-bold" readonly>
-                            </div>
+                            <div class="card bg-light">
+                                <div class="card-body text-end">
+                                    <h5 class="mb-2">Grand Return Total</h5>
+                                    <h2 class="text-success fw-bold mb-3">৳ <span id="grand-total">0.00</span></h2>
 
-                            <button type="submit" class="btn btn-success btn-md shadow-sm" >
-                                <i class="fas fa-undo-alt me-2"></i> Submit Purchase Return
-                            </button>
+                                    <button type="submit" class="btn btn-success btn-lg px-4" id="submitBtn">
+                                        <i class="fas fa-undo-alt me-2"></i>Submit Return
+                                    </button>
+                                    <p class="text-muted small mt-2 mb-0">
+                                        <i class="fas fa-info-circle"></i> Stock & supplier accounts will update automatically.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </form>
-
             </div>
         </div>
 
     </div>
 </section>
-
 @endsection
 
 @section('script')
 <script>
-    $(document).ready(function() {
-        // Calculate totals on page load
-        $('.return-qty').trigger('change');
-    });
-
-    $(document).on('keyup change', '.return-qty', function() {
-        let qty = parseFloat($(this).val()) || 0;
-        let price = parseFloat($(this).data('price')) || 0;
-        let total = qty * price;
-        $(this).closest('tr').find('.row-total').val(total.toFixed(2));
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.return-qty').forEach(input => {
+            input.addEventListener('input', function() {
+                calculateLineTotal(this);
+                calculateGrandTotal();
+            });
+            if (input.value) calculateLineTotal(input);
+        });
         calculateGrandTotal();
     });
 
+    function calculateLineTotal(input) {
+        const qty = parseFloat(input.value) || 0;
+        const price = parseFloat(input.dataset.price) || 0;
+        const total = qty * price;
+        input.closest('tr').querySelector('.row-total').textContent = '৳ ' + total.toFixed(2);
+        return total;
+    }
+
     function calculateGrandTotal() {
         let grandTotal = 0;
-        $('.row-total').each(function() {
-            grandTotal += parseFloat($(this).val()) || 0;
+        document.querySelectorAll('.return-qty').forEach(input => {
+            if (input.value && !input.disabled && input.value > 0) {
+                grandTotal += calculateLineTotal(input);
+            }
         });
-        $('#grand-total').val(grandTotal.toFixed(2));
+        document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = grandTotal <= 0;
+        submitBtn.classList.toggle('btn-secondary', grandTotal <= 0);
+        submitBtn.classList.toggle('btn-success', grandTotal > 0);
     }
+
+    document.getElementById('returnForm').addEventListener('submit', function(e) {
+        const total = document.getElementById('grand-total').textContent;
+        if (parseFloat(total) <= 0) {
+            e.preventDefault();
+            alert('Please enter return quantity for at least one product.');
+            return false;
+        }
+        return confirm(`Confirm return of ৳ ${total}? This will update stock and supplier accounts.`);
+    });
 </script>
 @endsection
