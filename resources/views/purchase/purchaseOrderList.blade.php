@@ -201,12 +201,15 @@
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                         @endif
+                                        @if(!in_array($po->status, ['cancel']))
                                         <a href="{{ route('po.return.form', $po->id) }}"
                                             class="btn btn-warning btn-sm"
                                             title="Return Items"
                                             data-toggle="tooltip">
                                             <i class="fas fa-undo"></i> Return
                                         </a>
+                                        @endif
+                                        @if(!in_array($po->status, ['completed']))
                                         <button type="button"
                                             class="btn btn-danger btn-sm"
                                             title="Delete"
@@ -214,6 +217,7 @@
                                             onclick="confirmDelete({{ $po->id }}, '{{ $po->po_number }}')">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
