@@ -119,12 +119,20 @@ Route::prefix('supplier')->group(function () {
 });
 
 //stock route
-Route::prefix('stock')->group(function () {
-    Route::get('/opening', [StockController::class, 'openingStockForm'])->name('stock.openingForm');
-    Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
-    Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
+// Route::prefix('stock')->group(function () {
+//     Route::get('/opening', [StockController::class, 'openingStockForm'])->name('stock.openingForm');
+//     Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('stock.openingSave');
+//     Route::get('/report', [StockController::class, 'stockReport'])->name('stock.report');
+// });
+Route::prefix('stock')->name('stock.')->group(function () {
+    Route::get('/report', [StockController::class, 'stockReport'])->name('report');
+    Route::get('/report/export', [StockController::class, 'reportExport'])->name('reportExport');
+    Route::get('/api/top-products', [StockController::class, 'apiTopProducts'])->name('apiTopProducts');
+    Route::get('/opening', [StockController::class, 'openingStockForm'])->name('openingForm');
+    Route::post('/opening/save', [StockController::class, 'openingStockSave'])->name('openingSave');
+    Route::get('/opening/export', [StockController::class, 'exportOpeningStock'])->name('openingExport');
+    Route::post('/opening/import', [StockController::class, 'importOpeningStock'])->name('openingImport');
 });
-
 
 
 // purchase route
