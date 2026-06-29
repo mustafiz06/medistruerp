@@ -12,6 +12,7 @@ use App\Http\Controllers\productSetting\CountryController;
 use App\Http\Controllers\productSetting\ProductController;
 use App\Http\Controllers\productSetting\UnitController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
@@ -37,6 +38,7 @@ Route::get('/', function () {
 // AJAX API ROUTES 
 Route::prefix('api')->name('api.')->group(function () {
     Route::get('/products/{id}', [AllApiController::class, 'getProduct'])->name('products.info');
+    Route::get('/products/search', [AllApiController::class, 'searchProducts'])->name('products.search');
 });
 
 //product setting route
@@ -149,9 +151,15 @@ Route::prefix('purchase-orders')->group(function () {
 
 
     Route::post('/status/{id}', [PurchaseOrderController::class, 'updateStatus'])->name('po.status.update');
-    
+
     Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('po.edit');
     Route::post('/update/{id}', [PurchaseOrderController::class, 'update'])->name('po.update');
+});
+//sales
+Route::prefix('sales')->group(function () {
+    Route::get('/', [SaleController::class, 'create'])->name('sales.index');
+    Route::get('/create', [SaleController::class, 'create'])->name('sales.create');
+    Route::get('/store', [SaleController::class, 'create'])->name('sales.store');
 });
 
 
